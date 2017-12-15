@@ -21,7 +21,8 @@ namespace COM
 			ModbusASCIIInterface com = new ModbusASCIIInterface();
 			double temp = -30;
 
-
+фвыa
+			asdasd
 
 
 
