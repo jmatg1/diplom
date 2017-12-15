@@ -30,7 +30,7 @@ namespace COM
 					Thread.Sleep(1000);
 					continue;
 				}
-				Console.WriteLine(localDate.ToString()+": Установили температу: " + temp+ "\n. Ждем 5 минут...");
+				Console.WriteLine(System.DateTime.Now.ToLongTimeString()+": Установили температу: " + temp+ "\n. Ждем 5 минут...");
 				Thread.Sleep(300000);
 				if (Math.Abs(com.getCurrentTemperature() - 999) < 1)
 					continue;
