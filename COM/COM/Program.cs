@@ -21,6 +21,7 @@ namespace COM
 			ModbusASCIIInterface com = new ModbusASCIIInterface();
 			double temp = -30;
 Где изменение?
+			ФФФФФФФФФФФФФФФФф
 			while (com.initPort("COM12"))
 			{
 				if (!com.setTargetTemperature(temp))
