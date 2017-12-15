@@ -40,8 +40,7 @@ namespace COM
 			}
 			catch (Exception) // Выполняем это вслучаи любой ошибке
 			{
-				Console.WriteLine(System.DateTime.Now.ToLongTimeString()+": ERROR: невозможно открыть COM - порт\n" /*+ e.ToString()*/);
-				Console.ReadKey();
+				Console.WriteLine(System.DateTime.Now.ToLongTimeString()+": ERROR: невозможно открыть COM - порт" /*+ e.ToString()*/);
 				return false;
 			}
 
@@ -144,7 +143,7 @@ public bool setTargetTemperature(double setTemp)
 				string tmp_st = ComRead();
 				if (tmp_st == "false")
 				{
-					return 999;
+					return 999.0;
 				}
 				string temp = tmp_st.Substring(7, 4);
 
@@ -153,7 +152,7 @@ public bool setTargetTemperature(double setTemp)
 			catch (Exception)
 			{ 
 				Console.Write(System.DateTime.Now.ToLongTimeString()+": ERROR:Неудачно Отправка. Получение температуры. getTargetTemperature\n");
-				return 999;
+				return 999.0;
 			}
 		}
 	}

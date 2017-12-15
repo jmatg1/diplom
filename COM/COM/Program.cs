@@ -14,30 +14,79 @@ namespace COM
 	{
 		static SerialPort port;
 
-
+private static void sw(string str){
+	StreamWriter sw1 = new StreamWriter("file.log", true);
+	sw1.WriteLine(str);
+	sw1.Close();//Close the file
+}
 		public static void Main(string[] args)
 		{
 
 			ModbusASCIIInterface com = new ModbusASCIIInterface();
-			double temp = -30;
 
-
-			while (com.initPort("COM12"))
+			double tempStart = -30;
+			double tempCam; // температура в камере
+			bool flagSetTemp = true;
+			// получаем список доступных портов
+			string[] ports = SerialPort.GetPortNames();
+			Console.WriteLine("Выберите порт:");
+			// выводим список портов
+			for (int i = 0; i < ports.Length; i++)
 			{
-				if (!com.setTargetTemperature(temp))
-				{
-					ModbusASCIIInterface.comport.Close();
-					Thread.Sleep(1000);
-					continue;
-				}
-				Console.WriteLine(System.DateTime.Now.ToLongTimeString()+": Установили температу: " + temp+ "\n. Ждем 5 минут...");
-				Thread.Sleep(300000);
-				if (Math.Abs(com.getCurrentTemperature() - 999) < 1)
-					continue;
-				Console.WriteLine(localDate.ToString()+": Температура в камере: " + temp+ "\n. ");
-
+				Console.WriteLine("[" + i.ToString() + "] " + ports[i].ToString());
 			}
-			Console.ReadKey();
+			port = new SerialPort();
+			// читаем номер из консоли
+			string n1 = Console.ReadLine();
+			int num = int.Parse(n1);
+
+			//Pass the filepath and filename to the StreamWriter Constructor
+
+
+
+
+
+			Console.WriteLine("Время\t\t\tУставка\t\t\tТемпература");
+
+			while (true)
+			{
+				while (com.initPort(ports[num]))
+				{
+					
+					if (flagSetTemp)
+					{
+						if (!com.setTargetTemperature(tempStart))
+						{
+							sw(System.DateTime.Now.ToLongTimeString() + "--> Не установили температуру " + tempStart);
+							break;
+						}
+						sw(System.DateTime.Now.ToLongTimeString() + "--> Установили температуру " + tempStart);
+						Console.Write(System.DateTime.Now.ToLongTimeString() + "\t\t\t" + tempStart);
+					}
+
+					tempCam = com.getCurrentTemperature();
+					if (tempCam == 999.0)
+					{// истина значит ошибка ошибка
+						sw(" Не прочитали температуру! ");
+						break;
+					}
+					if (flagSetTemp)
+						Console.WriteLine("\t\t\t" + tempCam);
+					sw(" ТемпКам " + tempCam);
+					if (tempCam == tempStart)
+					{
+						Console.WriteLine(System.DateTime.Now.ToLongTimeString() + "Температура установилась ждем 5 мин.");
+						sw(System.DateTime.Now.ToLongTimeString() + "Температура установилась ждем 5 мин.");
+						Thread.Sleep(300000);// ждем 5 мин. 60 000 = 1 sec
+						flagSetTemp = true;
+						tempStart += 2;
+					}
+					flagSetTemp = false;
+				}
+				Console.WriteLine("--> Ждем минуту и начнем сначала");
+				ModbusASCIIInterface.comport.Close();
+				Thread.Sleep(60000);
+			}
 			//asd.DataRec();
 
 			Console.Write(chardig(-25.5, true) + "\r\n");
