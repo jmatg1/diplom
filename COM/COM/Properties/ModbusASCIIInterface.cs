@@ -11,17 +11,17 @@ namespace COM
 
 
 		public static SerialPort comport; // cop port
-		public static string ComReply; // строка ответа компорта
-		public static int ReadTimeout = 1000; // время ожидания ответа
+		public static string ComReply = ""; // строка ответа компорта
+		public static int ReadTimeout = 10000; // время ожидания ответа
 
 		public ModbusASCIIInterface()
 		{
 			comport = new SerialPort();
-		}  
+		}
 		/// <summary>
 		/// Инициализация порта
 		/// </summary>
-		public bool initPort(string num) 
+		public bool initPort(string num)
 		{
 			try
 			{
@@ -31,8 +31,8 @@ namespace COM
 				comport.DataBits = 8;
 				comport.Parity = System.IO.Ports.Parity.None;
 				comport.StopBits = System.IO.Ports.StopBits.One;
-				comport.ReadTimeout = 1000;
-				comport.WriteTimeout = 1000;
+				comport.ReadTimeout = 10000;
+				comport.WriteTimeout = 10000;
 				comport.DataReceived += new SerialDataReceivedEventHandler(ComDataRec); // функция ComDataRec.. вызывается когда пришло сообщение на ком порт
 				comport.Open();
 
@@ -40,7 +40,7 @@ namespace COM
 			}
 			catch (Exception) // Выполняем это вслучаи любой ошибке
 			{
-				Console.WriteLine(System.DateTime.Now.ToLongTimeString()+": ERROR: невозможно открыть COM - порт" /*+ e.ToString()*/);
+				Console.WriteLine(System.DateTime.Now.ToLongTimeString() + ": ERROR: невозможно открыть COM - порт" /*+ e.ToString()*/);
 				return false;
 			}
 
@@ -49,9 +49,9 @@ namespace COM
 		}
 		private void ComDataRec(object sender, SerialDataReceivedEventArgs e) // заносим сообщение в глобальную переменную Comreply
 		{
-			ComReply = "";
+
 			SerialPort sp = (SerialPort)sender;
-			ComReply = sp.ReadExisting();
+			ComReply += sp.ReadExisting();
 		}
 		private string ComRead()
 		{
@@ -62,7 +62,7 @@ namespace COM
 				i++;
 				if (i == 10)
 				{
-					Console.WriteLine(System.DateTime.Now.ToLongTimeString()+": ERROR: Время ожидания приема истекло.ComRead\n");
+					Console.WriteLine(System.DateTime.Now.ToLongTimeString() + ": ERROR: Время ожидания приема истекло.ComRead\n");
 					return "false";
 				}
 			}
@@ -91,7 +91,7 @@ namespace COM
 		}
 
 		/*На входе команда без символов : CR LC .На выходе контрольная сумма команды формата 00-FFH */
-		private  string calculateLRC(string command)
+		private string calculateLRC(string command)
 		{
 			var bb = new byte[command.Length];
 			for (int i = 0; i < command.Length; i += 2)
@@ -113,7 +113,7 @@ namespace COM
 		/// <summary>
 		/// Установка температуры
 		/// </summary>
-public bool setTargetTemperature(double setTemp)
+		public bool setTargetTemperature(double setTemp)
 		{
 			try
 			{
@@ -127,20 +127,21 @@ public bool setTargetTemperature(double setTemp)
 			}
 			catch (Exception)
 			{
-				Console.Write(System.DateTime.Now.ToLongTimeString()+": ERROR:Неудачно отправка.Установка уставки setTargetTemperature\n");
+				Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR:Неудачно отправка.Установка уставки setTargetTemperature\n");
 				return false;
 			}
 		}
-		
+
 		///<summary>
 		///Получаем значение температуры
 		///</summary>
-		public double getCurrentTemperature() 
+		public double getCurrentTemperature()
 		{
 			try
 			{
-				comport.Write(":010300300001FB\r\n");
+				comport.Write(":010300000001FB\r\n");
 				string tmp_st = ComRead();
+
 				if (tmp_st == "false")
 				{
 					return 999.0;
@@ -150,11 +151,39 @@ public bool setTargetTemperature(double setTemp)
 				return int.Parse(temp, System.Globalization.NumberStyles.HexNumber) / 10;
 			}
 			catch (Exception)
-			{ 
-				Console.Write(System.DateTime.Now.ToLongTimeString()+": ERROR:Неудачно Отправка. Получение температуры. getTargetTemperature\n");
+			{
+				Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR:Неудачно Отправка. Получение температуры. getTargetTemperature\n");
 				return 999.0;
 			}
 		}
+		///<summary>
+		///Получаем значение уставки
+		///</summary>
+		public double getUst()
+		{
+			try
+			{
+				comport.Write(":010300300001CB\r\n");
+				string tmp_st = ComRead();
+
+				if (tmp_st == "false")
+				{
+					return 999.0;
+				}
+				string temp = tmp_st.Substring(7, 4);
+
+				return int.Parse(temp, System.Globalization.NumberStyles.HexNumber) / 10;
+			}
+			catch (Exception)
+			{
+				Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR:Неудачно. Получение уставки\n");
+				return 999.0;
+			}
+		}
+
+
+
+
 	}
 }
 

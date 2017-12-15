@@ -24,7 +24,7 @@ private static void sw(string str){
 
 			ModbusASCIIInterface com = new ModbusASCIIInterface();
 
-			double tempStart = -30;
+			double tempStart = 30;
 			double tempCam; // температура в камере
 			bool flagSetTemp = true;
 			// получаем список доступных портов
@@ -40,12 +40,19 @@ private static void sw(string str){
 			string n1 = Console.ReadLine();
 			int num = int.Parse(n1);
 
-			//Pass the filepath and filename to the StreamWriter Constructor
+			//--------------------------
 
+			com.initPort(ports[num]);
+			while (true)
+			{
+				tempCam = com.getUst();
+				Console.WriteLine(tempCam);
+			}
+			ModbusASCIIInterface.comport.Close();
+			Console.ReadKey();
+			return;
 
-
-
-
+			//----------------------
 			Console.WriteLine("Время\t\t\tУставка\t\t\tТемпература");
 
 			while (true)
@@ -75,20 +82,23 @@ private static void sw(string str){
 					sw(" ТемпКам " + tempCam);
 					if (tempCam == tempStart)
 					{
-						Console.WriteLine(System.DateTime.Now.ToLongTimeString() + "Температура установилась ждем 5 мин.");
-						sw(System.DateTime.Now.ToLongTimeString() + "Температура установилась ждем 5 мин.");
+						Console.WriteLine(System.DateTime.Now.ToLongTimeString() + " Температура установилась ждем 5 мин.");
+						sw(System.DateTime.Now.ToLongTimeString() + " Температура установилась ждем 5 мин.");
 						Thread.Sleep(300000);// ждем 5 мин. 60 000 = 1 sec
 						flagSetTemp = true;
 						tempStart += 2;
+						continue;
 					}
 					flagSetTemp = false;
+					ModbusASCIIInterface.comport.Close();
+					Thread.Sleep(60000);
 				}
 				Console.WriteLine("--> Ждем минуту и начнем сначала");
 				ModbusASCIIInterface.comport.Close();
 				Thread.Sleep(60000);
 			}
 			//asd.DataRec();
-
+			return ;
 			Console.Write(chardig(-25.5, true) + "\r\n");
 			Console.Write(chardig(100, true) + "\r\n");
 			Console.Write(chardig(-11.1, true) + "\r\n");
