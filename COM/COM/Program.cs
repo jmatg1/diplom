@@ -87,6 +87,8 @@ private static void sw(string str){
 						Thread.Sleep(300000);// ждем 5 мин. 60 000 = 1 sec
 						flagSetTemp = true;
 						tempStart += 2;
+						if (tempStart == 30)
+							tempStart=-30
 						continue;
 					}
 					flagSetTemp = false;
