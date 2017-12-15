@@ -1,0 +1,17 @@
+﻿<Properties StartupConfiguration="{9089AA8F-F006-4EB8-9005-D50981FDFD7B}|Default">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Properties\TelnetInterface.cs">
+    <Files>
+      <File FileName="Properties\TelnetInterface.cs" Line="15" Column="12" />
+      <File FileName="Properties\TelnetClient.cs" Line="85" Column="28" />
+      <File FileName="Properties\DataReceivedEventArgs.cs" Line="1" Column="1" />
+      <File FileName="Properties\AssemblyInfo.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.Telnet PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>

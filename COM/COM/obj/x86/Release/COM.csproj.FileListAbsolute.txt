@@ -1,0 +1,2 @@
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\COM\COM\bin\Release\COM.exe
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\COM\COM\obj\x86\Release\COM.exe

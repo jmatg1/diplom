@@ -1,0 +1,8 @@
+C:\Users\Explicit\Documents\Projects\COM\COM\bin\Debug\COM.exe
+C:\Users\Explicit\Documents\Projects\COM\COM\bin\Debug\COM.pdb
+C:\Users\Explicit\Documents\Projects\COM\COM\obj\x86\Debug\COM.exe
+C:\Users\Explicit\Documents\Projects\COM\COM\obj\x86\Debug\COM.pdb
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\COM\COM\bin\Debug\COM.exe
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\COM\COM\bin\Debug\COM.pdb
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\COM\COM\obj\x86\Debug\COM.exe
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\COM\COM\obj\x86\Debug\COM.pdb

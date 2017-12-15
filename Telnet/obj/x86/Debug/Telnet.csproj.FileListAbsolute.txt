@@ -1,0 +1,4 @@
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\Telnet\bin\Debug\Telnet.exe
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\Telnet\bin\Debug\Telnet.pdb
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\Telnet\obj\x86\Debug\Telnet.exe
+D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\Telnet\obj\x86\Debug\Telnet.pdb
