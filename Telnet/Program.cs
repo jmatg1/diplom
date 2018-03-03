@@ -11,17 +11,17 @@ public class SynchronousSocketClient
 	public static void StartClient()
 	{
 		// Data buffer for incoming data.
-		byte[] bytes = new byte[1024];
+		byte[] bytes = new byte[256000];
 
 		// Connect to a remote device.
 		try
 		{
 			// Establish the remote endpoint for the socket.
 			// This example uses port 11000 on the local computer.
-			IPHostEntry ipHostInfo = Dns.GetHostEntry("192.168.0.2");
+			IPHostEntry ipHostInfo = Dns.GetHostEntry("192.168.0.1");
 
 			IPAddress ipAddress = ipHostInfo.AddressList[0];
-			IPEndPoint remoteEP = new IPEndPoint(ipAddress, 5025);
+			IPEndPoint remoteEP = new IPEndPoint(ipAddress, 23);
 
 
 			// Create a TCP/IP  socket.
@@ -38,23 +38,28 @@ public class SynchronousSocketClient
 					sender.RemoteEndPoint.ToString());
 
 				// Encode the data string into a byte array.
-				string n1 = Console.ReadLine();
-				byte[] msg = Encoding.ASCII.GetBytes(n1 + "\n");
-
-				// Отправляем. в инт кол-во символов
-				int bytesSent = sender.Send(msg);
-				Console.WriteLine("bytesSent " + bytesSent);
-				// Receive the response from the remote device.
-				int bytesRec = sender.Receive(bytes);
-
-				Console.Write("bytesRec " + Convert.ToString(bytesRec));
-				if (IsNullOrEmpty(Convert.ToString(bytesRec)))
+				while (true)
 				{
-					Console.WriteLine("NO OTVETA");
-				}
-				Console.WriteLine("Echoed test = {0}",
-					Encoding.ASCII.GetString(bytes, 0, bytesRec));
+					
+					//Console.WriteLine("bytesSent " + bytesSent);
+					// Receive the response from the remote device.
+					int bytesRec = sender.Receive(bytes);
 
+					//Console.Write("bytesRec " + Convert.ToString(bytesRec));
+					if (IsNullOrEmpty(Convert.ToString(bytesRec)))
+					{
+						Console.WriteLine("NO OTVETA");
+					}
+
+
+					Console.WriteLine("{0}",Encoding.ASCII.GetString(bytes, 0, bytesRec));
+
+string n1 = Console.ReadLine();
+byte[] msg = Encoding.ASCII.GetBytes(n1 + "\n");
+
+// Отправляем. в инт кол-во символов
+int bytesSent = sender.Send(msg);
+				}
 				// Release the socket.
 				sender.Shutdown(SocketShutdown.Both);
 				sender.Close();
@@ -89,11 +94,11 @@ public class SynchronousSocketClient
 
 	public static int Main(String[] args)
 	{
-		while (true)
-		{
+
 			StartClient();
-		}
+
 		//Console.ReadKey();
+
 		return 0;
 	}
 }
