@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.IO;
-using System.Collections; // for array list
-using System.Linq; // for List<>
-using System.Windows; // for vector
-namespace diplom
+namespace Network.Connect
 {
-	class telnet
+	class nalib
 	{
-		public static TelnetConnection tc;
+		static TelnetConnection tc;
+
 		/// <summary>
 		/// Write a SCPI command to the telnet connection.
 		/// If the command has a '?', then read back the response and print
@@ -21,7 +19,7 @@ namespace diplom
 		/// of a SCPI string argument, and not actually signify a SCPI query.
 		/// </remarks>
 		/// <param name="s"></param>
-		public static void Write(string s)
+		static void Write(string s)
 		{
 			Console.WriteLine(s);
 			tc.WriteLine(s);
@@ -187,70 +185,6 @@ namespace diplom
 		public void Dispose()
 		{
 			Close();
-		}
-		public List<double> GetFreq(int channel)
-		{
-			WriteLine(":SENS" + channel + ":FREQ:DATA?");
-			string input = Read();
-			List<string> freq_string = input.Split(',').ToList();
-			List<double> freq = freq_string.Select(x => double.Parse(x)).ToList();
-			foreach (string combo in freq_string)
-       		{
-				Console.WriteLine(combo);
-        	}	
-			return freq;
-		}
-
-
-		public List<double> doMeasurement(int channel, string Sp)
-		{
-			List<double> complex;
-			WriteLine(":SENS" + channel + ":DATA:CORR? " + Sp);
-			string input = Read();
-			List<string> freq_string = input.Split(',').ToList();
-			List<double> freq = freq_string.Select(x => double.Parse(x)).ToList();
-
-
-			List<List<int>> Mas = new List<List<int>>();    //динамический двумерный массив
-			List<int> row = new List<int>();                //строка массива
-
-
-			for (int i = 0; i < freq.Count; i++)
-            {
-                row = new List<int>();
-                for (int j = 0; j<2; j++) row.Add(); //строка массива заполняется просто суммой i и j
-                Mas.Add(row);                               //строка добавляется в массив
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			//int[] scores = new int[] ;
-			/*foreach (double combo in freq)
-			{
-				Console.Write(combo+",");
-			}*/
-
-			for (int i = 0; i < freq.Count; i += 2)
-			{
-				Console.Write(freq[i] + ",");
-				//complex.AddRange(freq[i],
-			}
-			return null;
 		}
 	}
 	#endregion
