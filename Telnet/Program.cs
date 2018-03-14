@@ -14,14 +14,9 @@ namespace diplom
 		static TelnetConnection tc;
 		static int Main(string[] args)
 		{
-
-
-
-
-
-List<List<int>> Mas = new List<List<int>>();    //динамический двумерный массив
-List<int> row = new List<int>();                //строка массива
-int n = 3;
+			/*List<List<int>> Mas = new List<List<int>>();    //динамический двумерный массив
+			List<int> row = new List<int>();                //строка массива
+			int n = 3;
  
             for (int i = 0; i<n; i++)
             {
@@ -35,19 +30,16 @@ int n = 3;
                 for (int j = 0; j<n; j++)
                     Console.Write(Mas[i][j].ToString()+" ");
                 Console.WriteLine();
-            }
+            }*/
+
+			List<int> list = new List<int>();
+			List<int> list1 = new List<int>();
+				list.Add(25);
+				list1.Add(20);
+			Console.Write(list[0] - list1[0]);
 
 
-
-
-
-
-
-
-
-			// defaultHostName is host name to use if one is not specified on the command line.
-			string defaultHostName = "192.168.0.2";
-			string hostName = defaultHostName;
+			string hostName = "192.168.0.2";
 
 			try
 			{

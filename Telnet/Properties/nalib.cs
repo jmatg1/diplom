@@ -195,62 +195,40 @@ namespace diplom
 			List<string> freq_string = input.Split(',').ToList();
 			List<double> freq = freq_string.Select(x => double.Parse(x)).ToList();
 			foreach (string combo in freq_string)
-       		{
+			{
 				Console.WriteLine(combo);
-        	}	
+			}
 			return freq;
 		}
 
 
 		public List<double> doMeasurement(int channel, string Sp)
 		{
-			List<double> complex;
 			WriteLine(":SENS" + channel + ":DATA:CORR? " + Sp);
 			string input = Read();
 			List<string> freq_string = input.Split(',').ToList();
 			List<double> freq = freq_string.Select(x => double.Parse(x)).ToList();
 
-
-			List<List<int>> Mas = new List<List<int>>();    //динамический двумерный массив
-			List<int> row = new List<int>();                //строка массива
-
-
-			for (int i = 0; i < freq.Count; i++)
-            {
-                row = new List<int>();
-                for (int j = 0; j<2; j++) row.Add(); //строка массива заполняется просто суммой i и j
-                Mas.Add(row);                               //строка добавляется в массив
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			//int[] scores = new int[] ;
 			/*foreach (double combo in freq)
 			{
 				Console.Write(combo+",");
-			}*/
-
+			}
 			for (int i = 0; i < freq.Count; i += 2)
 			{
 				Console.Write(freq[i] + ",");
 				//complex.AddRange(freq[i],
+			}*/
+			return freq;
+		}
+		public double Deviation(int channel, string Sp) {
+			List<double> S = doMeasurement(channel, Sp);
+			for (int i = 0; i<S.Count; i += 2)
+			{
+				
 			}
-			return null;
+			return 2.3;
+			
 		}
 	}
 	#endregion
