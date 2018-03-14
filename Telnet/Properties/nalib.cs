@@ -6,6 +6,7 @@ using System.IO;
 using System.Collections; // for array list
 using System.Linq; // for List<>
 using System.Windows; // for vector
+using System.Numerics;
 namespace diplom
 {
 	class telnet
@@ -166,7 +167,7 @@ namespace diplom
 			if (IsOpen)
 				Close();
 			m_Hostname = hostname;
-			m_Client = new TcpClient(hostname, 5025);
+			m_Client = new TcpClient(hostname, 5025);//5025
 			m_Stream = m_Client.GetStream();
 			m_Stream.ReadTimeout = ReadTimeout;
 			m_IsOpen = true;
@@ -188,6 +189,7 @@ namespace diplom
 		{
 			Close();
 		}
+#endregion
 		public List<double> GetFreq(int channel)
 		{
 			WriteLine(":SENS" + channel + ":FREQ:DATA?");
@@ -202,12 +204,17 @@ namespace diplom
 		}
 
 
-		public List<double> doMeasurement(int channel, string Sp)
+		public List<Complex> doMeasurement(int channel, string Sp)
 		{
 			WriteLine(":SENS" + channel + ":DATA:CORR? " + Sp);
 			string input = Read();
 			List<string> freq_string = input.Split(',').ToList();
 			List<double> freq = freq_string.Select(x => double.Parse(x)).ToList();
+			List<Complex> Scomplex = new List<Complex>();
+			for (int i = 0; i<freq.Count; i += 2)
+			{
+				Scomplex.Add(new Complex(freq[i], freq[i + 1]));//амплитуда, и фаза в  виде Re(Sp) Im(Sp)
+			}
 
 			//int[] scores = new int[] ;
 			/*foreach (double combo in freq)
@@ -219,17 +226,19 @@ namespace diplom
 				Console.Write(freq[i] + ",");
 				//complex.AddRange(freq[i],
 			}*/
-			return freq;
+			return Scomplex;
 		}
-		public double Deviation(int channel, string Sp) {
-			List<double> S = doMeasurement(channel, Sp);
+		public List<Complex> Deviation(int channel, string Sp) {
+			List<Complex> S = doMeasurement(channel, Sp);
+			List<Complex> Scomplex = new List<Complex>();
 			for (int i = 0; i<S.Count; i += 2)
 			{
-				
+				Scomplex.Add(new Complex (20 * Math.Log10(S[i].Magnitude),	180 * S[i+1].Phase/Math.PI));
+
 			}
-			return 2.3;
+			return Scomplex;
 			
 		}
 	}
-	#endregion
+
 }

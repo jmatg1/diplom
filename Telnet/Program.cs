@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using static System.String;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Numerics;//for complex
 namespace diplom
 {
 
@@ -31,12 +31,14 @@ namespace diplom
                     Console.Write(Mas[i][j].ToString()+" ");
                 Console.WriteLine();
             }*/
-
-			List<int> list = new List<int>();
-			List<int> list1 = new List<int>();
-				list.Add(25);
-				list1.Add(20);
-			Console.Write(list[0] - list1[0]);
+			List<Complex> Scomplex = new List<Complex>();
+			Scomplex.Add(new Complex(Math.Pow(10,-26.083/20),	Math.Pow(Math.E, -10.5595383210021*Math.PI/180)));
+			Scomplex.Add(new Complex(20 * Math.Log10(0.0496378742882),	180 * -0.184298711192/Math.PI));
+			Scomplex.Add(new Complex(1,2));
+		
+			Console.WriteLine(Scomplex[0].Real + " " + Scomplex[0].Imaginary);
+			Console.WriteLine(Scomplex[1].Real+ " " + Scomplex[1].Imaginary);
+			Console.Write(Scomplex[2].Real + " " + Scomplex[2].Imaginary);
 
 
 			string hostName = "192.168.0.2";
@@ -46,7 +48,7 @@ namespace diplom
 				tc = new TelnetConnection();
 				tc.ReadTimeout = 10000; // 10 sec
 										// open socket on hostName, which can be an IP address, or use host name (e.g. "A-N9912A-22762") used in lieu of IP address
-				tc.Open(hostName);
+				tc.Open(hostName); // hostname
 				if (tc.IsOpen)
 				{
 
@@ -68,6 +70,7 @@ namespace diplom
 				else
 				{
 					Console.WriteLine("Error opening " + hostName);
+					Console.ReadKey();
 					return -1;
 				}
 				//FieldFox Programming Guide 5
@@ -75,9 +78,11 @@ namespace diplom
 			catch (Exception e)
 			{
 				Console.WriteLine(e.ToString());
+				Console.ReadKey();
 				return -1;
 			}
-			// exit normally.
+			// exit normally
+			Console.ReadKey();
 			return 0;
 		}
 
