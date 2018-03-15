@@ -32,13 +32,18 @@ namespace diplom
                 Console.WriteLine();
             }*/
 			List<Complex> Scomplex = new List<Complex>();
-			Scomplex.Add(new Complex(Math.Pow(10,-26.083/20),	Math.Pow(Math.E, -10.5595383210021*Math.PI/180)));
-			Scomplex.Add(new Complex(20 * Math.Log10(0.0496378742882),	180 * -0.184298711192/Math.PI));
-			Scomplex.Add(new Complex(1,2));
-		
-			Console.WriteLine(Scomplex[0].Real + " " + Scomplex[0].Imaginary);
-			Console.WriteLine(Scomplex[1].Real+ " " + Scomplex[1].Imaginary);
-			Console.Write(Scomplex[2].Real + " " + Scomplex[2].Imaginary);
+			List<Complex> Scomplex1 = new List<Complex>();
+			Scomplex.Add(new Complex(0.0496378742882,-0.18429871392));
+			Scomplex1.Add(new Complex(0.0496378742882,-0.1842984192));
+			Scomplex.Add(new Complex(0.0496378742882,-0.18429821192));
+			Scomplex1.Add(new Complex(0.0496378742882,-0.1842987141192));
+			//Scomplex.Add(new Complex(Math.Pow(10,-26.083/20),	Math.Pow(Math.E, -10.5595383210021*Math.PI/180)));
+		//	Scomplex.Add(new Complex(20 * Math.Log10(Scomplex[0].Magnitude),	180 * Scomplex[0].Phase/Math.PI));
+			//double rezult = Math.Pow(10, Scomplex[1].Real / 20);
+			//Console.WriteLine(Scomplex[0].Magnitude + " " + Scomplex[0].Phase);
+			//Console.WriteLine(Scomplex[1].Real+ " " + Scomplex[1].Imaginary);
+			//Console.WriteLine(Scomplex[2].Magnitude + " " + Scomplex[2].Phase);
+			//Console.WriteLine("rezult = " + rezult);
 
 
 			string hostName = "192.168.0.2";
@@ -46,6 +51,7 @@ namespace diplom
 			try
 			{
 				tc = new TelnetConnection();
+				Console.Write(tc.MSD(Scomplex, Scomplex1));
 				tc.ReadTimeout = 10000; // 10 sec
 										// open socket on hostName, which can be an IP address, or use host name (e.g. "A-N9912A-22762") used in lieu of IP address
 				tc.Open(hostName); // hostname

@@ -9,7 +9,8 @@ using System.Windows; // for vector
 using System.Numerics;
 namespace diplom
 {
-	class telnet
+
+	/*class telnet // МОЖ УДАЛИТЬ?
 	{
 		public static TelnetConnection tc;
 		/// <summary>
@@ -38,7 +39,7 @@ namespace diplom
 		{
 			Console.WriteLine(tc.Read());
 		}
-	}
+	}*/
 
 	#region TelnetConnection - no need to edit
 
@@ -47,6 +48,7 @@ namespace diplom
 	/// </summary>
 	public class TelnetConnection : IDisposable
 	{
+		public static string globalHostname = "192.168.0.2";
 		TcpClient m_Client;
 		NetworkStream m_Stream;
 		bool m_IsOpen = false;
@@ -66,7 +68,7 @@ namespace diplom
 		void CheckOpen()
 		{
 			if (!IsOpen)
-				throw new Exception("Connection not open.");
+				Open(globalHostname);
 		}
 		public string Hostname
 		{
@@ -164,15 +166,24 @@ namespace diplom
 
 		public void Open(string hostname)
 		{
-			if (IsOpen)
-				Close();
-			m_Hostname = hostname;
-			m_Client = new TcpClient(hostname, 5025);//5025
-			m_Stream = m_Client.GetStream();
-			m_Stream.ReadTimeout = ReadTimeout;
-			m_IsOpen = true;
-			if (Opened != null)
-				Opened();
+			try
+			{
+				globalHostname = hostname;
+				if (IsOpen)
+					Close();
+				m_Hostname = hostname;
+				m_Client = new TcpClient(hostname, 5025);//5025
+				m_Stream = m_Client.GetStream();
+				m_Stream.ReadTimeout = ReadTimeout;
+				m_IsOpen = true;
+				if (Opened != null)
+					Opened();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message + " Повторно подключаюсь.");
+				Open(globalHostname);
+			}
 		}
 		public void Close()
 		{
@@ -185,13 +196,16 @@ namespace diplom
 			if (Closed != null)
 				Closed();
 		}
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Dispose()
 		{
 			Close();
 		}
 		#endregion
 		public List<double> GetFreq(int channel)
-		{
+		{	CheckOpen();
 			WriteLine(":SENS" + channel + ":FREQ:DATA?");
 			string input = Read();
 			List<string> freq_string = input.Split(',').ToList();
@@ -208,6 +222,7 @@ namespace diplom
 		/// </summary>
 		public List<Complex> doMeasurement(int channel, string Sp)
 		{
+            CheckOpen();
 			WriteLine(":SENS" + channel + ":DATA:CORR? " + Sp);
 			string input = Read();
 			List<string> freq_string = input.Split(',').ToList();
