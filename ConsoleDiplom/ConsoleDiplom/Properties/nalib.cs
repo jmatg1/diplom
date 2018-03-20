@@ -7,6 +7,7 @@ using System.Collections; // for array list
 using System.Linq; // for List<>
 using System.Windows; // for vector
 using System.Numerics;
+using System.Net.NetworkInformation;
 namespace diplom
 {
 
@@ -65,10 +66,24 @@ namespace diplom
 			if (open)
 				Open(host);
 		}
+		public bool isClientConnected()
+		{
+			if (m_Client.Connected)
+			{
+
+						return true;
+		
+			}
+
+			return true;
+		}
+
 		void CheckOpen()
 		{
-			if (!IsOpen)
-				Open(globalHostname);
+			if (isClientConnected())
+				Console.WriteLine(1);
+			else
+				Console.WriteLine(1);
 		}
 		public string Hostname
 		{
@@ -112,45 +127,55 @@ namespace diplom
 		/// <returns></returns>
 		public byte[] ReadBytes()
 		{
-			int i = m_Stream.ReadByte();
-			byte b = (byte)i;
-			int bytesToRead = 0;
-			var bytes = new List<byte>();
-			if ((char)b == '#')
+			try
 			{
-				bytesToRead = ReadLengthHeader();
-				if (bytesToRead > 0)
+				int i = m_Stream.ReadByte();
+				byte b = (byte)i;
+				int bytesToRead = 0;
+				var bytes = new List<byte>();
+				if ((char)b == '#')
 				{
-					i = m_Stream.ReadByte();
-					if ((char)i != '\n') // discard carriage return after length header.
-						bytes.Add((byte)i);
-				}
-			}
-			if (bytesToRead == 0)
-			{
-				while (i != -1 && b != (byte)'\n')
-				{
-					bytes.Add(b);
-					i = m_Stream.ReadByte();
-					b = (byte)i;
-				}
-			}
-			else
-			{
-				int bytesRead = 0;
-				while (bytesRead < bytesToRead && i != -1)
-				{
-					i = m_Stream.ReadByte();
-					if (i != -1)
+					bytesToRead = ReadLengthHeader();
+					if (bytesToRead > 0)
 					{
-						bytesRead++;
-						// record all bytes except \n if it is the last char.
-						if (bytesRead < bytesToRead || (char)i != '\n')
+						i = m_Stream.ReadByte();
+						if ((char)i != '\n') // discard carriage return after length header.
 							bytes.Add((byte)i);
 					}
 				}
+				if (bytesToRead == 0)
+				{
+					while (i != -1 && b != (byte)'\n')
+					{
+						bytes.Add(b);
+						i = m_Stream.ReadByte();
+						b = (byte)i;
+					}
+				}
+				else
+				{
+					int bytesRead = 0;
+					while (bytesRead < bytesToRead && i != -1)
+					{
+						i = m_Stream.ReadByte();
+						if (i != -1)
+						{
+							bytesRead++;
+							// record all bytes except \n if it is the last char.
+							if (bytesRead < bytesToRead || (char)i != '\n')
+								bytes.Add((byte)i);
+						}
+					}
+				}
+
+				return bytes.ToArray();
 			}
-			return bytes.ToArray();
+			catch (Exception e)
+			{
+				Console.WriteLine("Ошибка чтения");
+				Open(globalHostname);
+				return ReadBytes;
+			}
 		}
 
 		int ReadLengthHeader()
@@ -174,7 +199,7 @@ namespace diplom
 				m_Hostname = hostname;
 				m_Client = new TcpClient(hostname, 5025);//5025
 				m_Stream = m_Client.GetStream();
-				m_Stream.ReadTimeout = ReadTimeout;
+				m_Stream.ReadTimeout = 10000;//10 sec
 				m_IsOpen = true;
 				if (Opened != null)
 					Opened();
@@ -204,8 +229,16 @@ namespace diplom
 			Close();
 		}
 		#endregion
+
+
+
+
+		/// <summary>
+		/// Получение частот с канала 1 или 2
+		/// </summary>
 		public List<double> GetFreq(int channel)
-		{	CheckOpen();
+		{
+			CheckOpen();
 			WriteLine(":SENS" + channel + ":FREQ:DATA?");
 			string input = Read();
 			List<string> freq_string = input.Split(',').ToList();
@@ -222,7 +255,7 @@ namespace diplom
 		/// </summary>
 		public List<Complex> doMeasurement(int channel, string Sp)
 		{
-            CheckOpen();
+			CheckOpen();
 			WriteLine(":SENS" + channel + ":DATA:CORR? " + Sp);
 			string input = Read();
 			List<string> freq_string = input.Split(',').ToList();
@@ -252,9 +285,9 @@ namespace diplom
 		{
 			List<Complex> S = doMeasurement(channel, Sp);
 			List<Complex> Scomplex = new List<Complex>();
-			for (int i = 0; i < S.Count; i += 2)
+			for (int i = 0; i < S.Count; i ++)
 			{
-				Scomplex.Add(new Complex(20 * Math.Log10(S[i].Magnitude), 180 * S[i + 1].Phase / Math.PI));
+				Scomplex.Add(new Complex(20 * Math.Log10(S[i].Magnitude), 180 * S[i].Phase / Math.PI));
 
 			}
 			return Scomplex;
@@ -270,10 +303,10 @@ namespace diplom
 			double rezult = 0;
 			for (int i = 0; i < St.Count; i++)
 			{
-				rezult += Math.Pow((St1[i].Real - St[i].Real) + (St1[i].Imaginary - St[i].Imaginary),2);
+				rezult += Math.Pow((St1[i].Real - St[i].Real) + (St1[i].Imaginary - St[i].Imaginary), 2);
 				//Console.WriteLine(rezult);
 			}
-			rezult = Math.Sqrt(rezult / (St.Count  - 1));
+			rezult = Math.Sqrt(rezult / (St.Count - 1));
 			//Console.WriteLine(St.Count  - 1);
 			return rezult;
 		}

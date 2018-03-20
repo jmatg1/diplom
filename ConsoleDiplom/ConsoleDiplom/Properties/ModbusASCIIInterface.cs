@@ -57,6 +57,10 @@ namespace diplom
 
 			return true;
 		}
+		public void Close()
+		{
+			comport.Close();
+		}
 		private void ComDataRec(object sender, SerialDataReceivedEventArgs e) // заносим сообщение в глобальную переменную Comreply
 		{
 
