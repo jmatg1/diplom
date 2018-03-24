@@ -12,9 +12,17 @@ namespace Diplom
 		{
 			Application.Init();
 			win = new MainWindow();
-			win.Show();
+			win.ShowAll();
 			Application.Run();
 
+
 		}
+		public static void Start()
+		{
+			ModbusASCIIInterface Com = new ModbusASCIIInterface();
+			Com.initPort(SettingsWindows.tempBegin.Value);
+		}
+
 	}
+
 }

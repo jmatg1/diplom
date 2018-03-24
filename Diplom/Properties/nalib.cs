@@ -9,7 +9,7 @@ using System.Windows; // for vector
 using System.Numerics;
 using System.Net.NetworkInformation;
 
-namespace diplom
+namespace Diplom
 {
 	
 	#region TelnetConnection - no need to edit

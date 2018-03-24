@@ -3,7 +3,7 @@ using System.IO.Ports;
 using System.Text;
 using System.Threading;
 
-namespace diplom
+namespace Diplom
 {
 
 	class ModbusASCIIInterface
