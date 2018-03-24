@@ -10,6 +10,8 @@ namespace ConsoleDiplom
 	{
 		public static void Main(string[] args)
 		{
+
+
 			diplom.ModbusASCIIInterface com = new diplom.ModbusASCIIInterface();
 			diplom.TelnetConnection tc = new diplom.TelnetConnection();
 
@@ -21,7 +23,7 @@ namespace ConsoleDiplom
 			//tc.Open("192.168.0.2");
 			//while (true)
 			//{
-				
+
 			//	Console.ReadKey();
 			//	tc.GetFreq(1);
 			//}
@@ -30,7 +32,7 @@ namespace ConsoleDiplom
 				case 1:
 					{
 						Console.WriteLine("Соединение ком порт...");
-						com.initPort("CO");
+						com.initPort("COМ11");
 						for (int i = 0; i < 10; i++)
 						{
 
@@ -56,14 +58,14 @@ namespace ConsoleDiplom
 						List<Complex> Scomplex = new List<Complex>();
 						List<double> freq = new List<double>();
 						Console.WriteLine("Соединение телнет...");
-						tc.Open("192.168.0.2");
+						tc.Connect("192.168.0.1");
 						for (int i = 0; i < 4; i++)
 						{
 
-								Console.WriteLine("Узнаем Sp re, im");
-								Scomplex = tc.doMeasurement(1, "S11");
-								Console.Write(" Получено данных: " + Scomplex.Count + " Ждем 25 сек");
-								Thread.Sleep(25000);// 60 000 = 1 минута
+							Console.WriteLine("Узнаем Sp re, im");
+							Scomplex = tc.doMeasurement(1, "S11");
+							Console.Write(" Получено данных: " + Scomplex.Count + " Ждем 25 сек");
+							Thread.Sleep(25000);// 60 000 = 1 минута
 
 							Console.WriteLine("Узнаем частоты c канала 1 ");
 							freq = tc.GetFreq(1);
@@ -77,10 +79,10 @@ namespace ConsoleDiplom
 
 						}
 						tc.Close();
-						if (tc.IsOpen)
+						if (!tc.IsOpen)
 							Console.WriteLine("Закрыли телнет");
 						else
-							Console.WriteLine("Уже закрыт телнет!!");
+							Console.WriteLine("не закрыт телнет!!");
 						break;
 					}
 				case 3:
@@ -88,7 +90,7 @@ namespace ConsoleDiplom
 						List<Complex> S = new List<Complex>();
 						List<Complex> S1 = new List<Complex>();
 						Console.WriteLine("Соединение телнет...");
-						tc.Open("192.168.0.2");
+						tc.Connect("192.168.0.2");
 						S = tc.doMeasurement(1, "S11");
 						Console.WriteLine("S.count " + S.Count + "\tЖдем 2 минуты ");
 						Thread.Sleep(120000);// 60 000 = 1 минута
