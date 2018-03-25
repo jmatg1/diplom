@@ -21,7 +21,7 @@ public partial class MainWindow
 	
 	private global::Gtk.MenuBar menubar2;
 	
-	private global::Gtk.Button button318;
+	private global::Gtk.DrawingArea drawingarea1;
 	
 	private global::Gtk.Statusbar statusbar1;
 	
@@ -79,16 +79,11 @@ public partial class MainWindow
 		w2.Expand = false;
 		w2.Fill = false;
 		// Container child vbox1.Gtk.Box+BoxChild
-		this.button318 = new global::Gtk.Button ();
-		this.button318.CanFocus = true;
-		this.button318.Name = "button318";
-		this.button318.UseUnderline = true;
-		this.button318.Label = global::Mono.Unix.Catalog.GetString ("GtkButton");
-		this.vbox1.Add (this.button318);
-		global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.button318]));
+		this.drawingarea1 = new global::Gtk.DrawingArea ();
+		this.drawingarea1.Name = "drawingarea1";
+		this.vbox1.Add (this.drawingarea1);
+		global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.drawingarea1]));
 		w3.Position = 1;
-		w3.Expand = false;
-		w3.Fill = false;
 		// Container child vbox1.Gtk.Box+BoxChild
 		this.statusbar1 = new global::Gtk.Statusbar ();
 		this.statusbar1.Sensitive = false;
@@ -127,6 +122,5 @@ public partial class MainWindow
 		this.Show ();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 		this.CloseAction.Activated += new global::System.EventHandler (this.OnActionSettingsActivated);
-		this.button318.Clicked += new global::System.EventHandler (this.OnButton318Clicked);
 	}
 }
