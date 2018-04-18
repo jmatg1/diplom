@@ -5,13 +5,13 @@
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.ItemProperties.Diplom__Onyx PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Properties\nalib.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
     <Files>
-      <File FileName="Program.cs" Line="88" Column="1" />
-      <File FileName="MainWindow.cs" Line="195" Column="37" />
-      <File FileName="C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" Line="3812" Column="5" />
-      <File FileName="gtk-gui\MainWindow.cs" Line="1" Column="1" />
-      <File FileName="Properties\nalib.cs" Line="32" Column="15" />
+      <File FileName="Program.cs" Line="59" Column="193" />
+      <File FileName="MainWindow.cs" Line="122" Column="17" />
+      <File FileName="SettingsWindows.cs" Line="53" Column="50" />
+      <File FileName="Properties\nalib.cs" Line="285" Column="39" />
+      <File FileName="Properties\cclib.cs" Line="188" Column="17" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MultiItemStartupConfigurations />

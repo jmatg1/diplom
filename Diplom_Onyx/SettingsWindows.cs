@@ -21,6 +21,7 @@ namespace Diplom
 			this.timeSp.Value = MainClass.timeSp;
 			this.timeSp1.Value = MainClass.timeSp1;
 
+			this.entryMSD.Text = MainClass.entryMSD.ToString();
 			//this.comboPort.Clear ();
 			this.comboPort.AppendText(MainClass.comPort);
 			this.comboPort.Active = 0;
@@ -48,7 +49,19 @@ namespace Diplom
 			MainClass.timeSp = this.timeSp.ValueAsInt;
 			MainClass.timeSp1 = this.timeSp1.ValueAsInt;
 
+			MainClass.entryMSD = double.Parse(this.entryMSD.Text);
 			MainClass.comPort = this.comboPort.ActiveText;
+
+			string text = 	this.tempBegin.ValueAsInt.ToString()	+ "," +
+						  	this.tempEnd.ValueAsInt.ToString()		+ "," +
+						  	this.tempStep.ValueAsInt.ToString() 	+ "," +
+							this.timeSp.ValueAsInt.ToString() 		+ "," +
+							this.timeSp1.ValueAsInt.ToString() 		+ "," +
+							this.entryMSD.Text 						+ "," +
+							this.comboPort.ActiveText;
+
+
+			MainProgramm.WriteFileSetting(text);
 			this.OnClose();
 		}
 

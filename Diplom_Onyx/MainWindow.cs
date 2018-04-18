@@ -7,14 +7,17 @@ using OxyPlot.GtkSharp;
 using OxyPlot.Series;
 using System.Collections.Generic;
 using System.Numerics;
-
+// for file
+using System.Linq;
+using System.Text;
+using System.IO;
 
 public partial class MainWindow : Gtk.Window
 {
 
 
 	public static PlotView _plotView;
-	public static PlotModel _plotTest = new PlotModel { Title = "Test"};
+	public static PlotModel _plotC = new PlotModel { Title = "С/t" };
 	public static PlotModel _plotS11 = new PlotModel();
 	public static PlotModel _plotS12 = new PlotModel { Title = "S12/freq" };
 
@@ -45,46 +48,21 @@ public partial class MainWindow : Gtk.Window
 		_plotS12.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Модуль", Unit = "|S12|^{}" });
 		_plotMSD.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Время", Unit = "сек^{}" });
 		_plotMSD.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Среднее квадратичное отклонение", Unit = "^[]" });
-		//_plotView.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = 80}); // линейка низ
-		//_plotView.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 10}); // линейка лево
+		_plotC.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "|C|", Unit = "^{}" });
+		_plotC.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Время", Unit = "сек^{}" });
 
 
 
-		var areaSeries1 = new LineSeries();
-		var points1 = new List<DataPoint>();
-		points1.Add(new DataPoint(0, 0));
-		points1.Add(new DataPoint(1, 1));
-		points1.Add(new DataPoint(2, 2));
-		points1.Add(new DataPoint(3, 3));
-		areaSeries1.ItemsSource = points1;
-		areaSeries1.Title = "S";
 
-		var areaSeries2 = new LineSeries();
-		var points2 = new List<DataPoint>();
-		points2.Add(new DataPoint(4, 4));
-		points2.Add(new DataPoint(5, 5));
-		points2.Add(new DataPoint(6, 6));
-		points2.Add(new DataPoint(7, 7));
-		areaSeries2.ItemsSource = points2;
-		areaSeries2.Title = "St";
-		areaSeries1.Color = OxyColors.Green;	//Зеленный
-		areaSeries2.Color = OxyColors.Blue; //Голубой
 
-		//_plotTest.Axes.Add(new LinearAxis(AxisPosition.Bottom, -1,1, "") );
-		_plotTest.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Частота", Unit = "Гц^{}" });
-		//_plotTest.Axes.Add(new LinearAxis { Position = AxisPosition.Right, Title = "Bottom"});
-		//Console.WriteLine(_plotTest.ltYAxis);
-		_plotTest.Series.Add(areaSeries1);
-		_plotTest.Series.Add(areaSeries2);
-
-		_plotView.Model = _plotTest;
-				//_plotView.Model.Axes.Add(new LinearAxis {Position= AxisPosition.Bottom, Title = "Bottom" });
+		_plotView.Model = _plotS12;
+		//_plotView.Model.Axes.Add(new LinearAxis {Position= AxisPosition.Bottom, Title = "Bottom" });
 		//--
 
 		this.comboS.AppendText("S12");
 		this.comboS.AppendText("СКО");
-		this.comboS.AppendText("Test");
-		this.comboS.Active = 2;
+		this.comboS.AppendText("C12");
+		this.comboS.Active = 0;
 		//Diplom.MainClass.PlotTest (this.widgetplot1.ShowPlot);
 		//System.Threading.Thread.Sleep(5000);
 		Thread threadtest = new Thread(new ThreadStart(test));
@@ -112,10 +90,9 @@ public partial class MainWindow : Gtk.Window
 		points2.Add(new DataPoint(6, 6));
 		points2.Add(new DataPoint(7, 7));
 		areaSeries2.ItemsSource = points2;
-		areaSeries2.Title = "St2";
-		_plotTest.Series.Add(areaSeries2);
-		_plotView.Model = _plotTest;
-		_plotView.Model.InvalidatePlot(true);
+		_plotC.Series.Add(areaSeries2);
+		//_plotView.Model = _plotC;
+		//_plotView.Model.InvalidatePlot(true);
 	}
 
 
@@ -129,6 +106,8 @@ public partial class MainWindow : Gtk.Window
 		_start.WriteLabelSetting += _start_WriteLabelSetting;
 		_start.WriteLabelTemp += _start_WriteLabelTemp;
 		_start.WriteLabelMSD += _start_WriteLabelMSD;
+		_start.ShowMSD += ChartingMSD;
+		_start.ShowC += ChartingC;
 
 		threadStart = new Thread(new ThreadStart(_start.Start));
 		threadStart.IsBackground = true; //теперь он фоновый и его можно закрыть по закытию  программы
@@ -138,13 +117,16 @@ public partial class MainWindow : Gtk.Window
 
 
 	}
+
 	#region Вывод лога, уставки, температуры, ско 
 	public void Log(string s)
 	{
 		Gtk.Application.Invoke(delegate
 		{
 			s = System.DateTime.Now.ToLongTimeString() + s + "\n";
-			textview3.Buffer.Insert(textview3.Buffer.StartIter, s);
+			//textview3.Buffer.Insert(textview3.Buffer.StartIter, s);
+			var ti = textview3.Buffer.StartIter;
+			textview3.Buffer.Insert(ref ti, s);
 		});
 	}
 
@@ -177,9 +159,9 @@ public partial class MainWindow : Gtk.Window
 	/// </summary>
 	protected void OnButStopClicked(object sender, EventArgs e)
 	{
-		if (threadStart == null) 							// если поток не создан, то ничего не делаем
+		if (threadStart == null)                            // если поток не создан, то ничего не делаем
 			return;
-		if (Diplom.MainProgramm.flagZero.IsAlive == true)	// отключаем таймер, при котором температура в камере меняется по его истечению
+		if (Diplom.MainProgramm.flagZero.IsAlive)	// отключаем таймер, при котором температура в камере меняется по его истечению
 		{
 			Diplom.MainProgramm.flagZero.Abort();
 			Diplom.MainProgramm.flagZero.Join();
@@ -227,43 +209,16 @@ public partial class MainWindow : Gtk.Window
 		_plotS12.Series.Add(areaSeries1);
 		Gtk.Application.Invoke(delegate
 		{
-			_plotView.Model = _plotS12;
-			_plotS12.InvalidatePlot(true);  //Должна обновить график!!! ПРОВЕРИТЬ
-											//this.hpaned2.Child2.Hide();	//Если не поможет то вот это расскомментировать
-											//this.hpaned2.Child2.ShowAll ();
+			if (this.comboS.Active == 0)
+			{
+				//_plotView.Model = _plotS12;
+
+				_plotS12.InvalidatePlot(true);  //Должна обновить график!!! ПРОВЕРИТЬ
+												//this.hpaned2.Child2.Hide();	//Если не поможет то вот это расскомментировать
+			}                           //this.hpaned2.Child2.ShowAll ();
 
 
 		});
-		//var model = new PlotModel { Title = "DateTimeAxis" };
-
-		//var startDate = DateTime.Now.AddDays(-10);
-		//var endDate = DateTime.Now;
-
-		//var minValue = DateTimeAxis.ToDouble(startDate);
-		//var maxValue = DateTimeAxis.ToDouble(endDate);
-
-		//model.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "HH:mm:ss"});
-		//model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = 80}); // линейка низ
-		//model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 10}); // линейка лево
-		//model.Axes.Add(new LogarithmicAxis { Position = AxisPosition.Left , Minimum = 0, Maximum = 100000000}); //
-
-		//model.Series.
-
-		//myModel.Series.Add(new FunctionSeries(funcFreq, 10000, 100000000, 1000, "cos(x)"));
-		//myModel.Series.Add( new Data
-		//var	lineSeries1 = new DataPoint();
-		//	model.Series.Add (lineSeries1);
-		//var points = new System.Collections.Generic.List<DataPoint> ();
-		//points.Add{1,2};
-		//var Aremodel = new PlotModel ();
-		//var areaSeries = new AreaSeries ();
-		//areaSeries.Title = "AreaSeries";
-		//areaSeries.DataFieldX = "asd";
-		//areaSeries.Points 
-		//Aremodel.Series.Add(areaSeries);
-		//var points = new List<DataPoint> ();
-		//points.Add(new DataPoint(17500, 14350));
-		//points.Add(new DataPoint(19000, 25000));
 
 	}
 	/// <summary>
@@ -277,15 +232,47 @@ public partial class MainWindow : Gtk.Window
 		//points.Add(new DataPoint(17500, 14350));
 		for (int i = 0; i < MSD.Count; i++)
 		{
-			pointsMSD.Add(new DataPoint(i, MSD[i]));
+			pointsMSD.Add(new DataPoint(i * Diplom.MainClass.timeSp, MSD[i]));  // По оси Х - время получается из номера элемента и умноженное на промежуток считывания S12
 		}
-		var myModel = new PlotModel { Title = "MSD/t" };
 
 		var areaSeries = new LineSeries();
 		areaSeries.ItemsSource = pointsMSD;
 
-		myModel.Series.Add(areaSeries);
-		_plotView.Model = myModel;
+		_plotMSD.Series.Add(areaSeries);
+		Gtk.Application.Invoke(delegate
+		{
+			if (this.comboS.Active == 1)
+			{
+				//_plotView.Model = _plotMSD;
+
+				_plotMSD.InvalidatePlot(true);
+			}
+
+		});
+
+	}
+	public void ChartingC(List<Complex> C, List<Complex> Ct)
+	{
+		var pointsMSD = new List<DataPoint>();
+		//points.Add(new DataPoint(17500, 14350));
+		double sum = 0.0;
+		for (int i = 0; i < C.Count; i++)
+		{
+			sum += C[i].Real - C[i].Real + Ct[i].Imaginary * Ct[i].Imaginary;
+		}
+		pointsMSD.Add(new DataPoint()); // Правильно
+		var areaSeries = new LineSeries();
+		areaSeries.ItemsSource = pointsMSD;
+
+		_plotC.Series.Add(areaSeries);
+		Gtk.Application.Invoke(delegate
+		{
+			if (this.comboS.Active == 2)
+			{
+				_plotC.InvalidatePlot(true);
+			}
+		});
+
 	}
 	protected void OnComboSChanged(object sender, EventArgs e)
 	{
@@ -301,14 +288,12 @@ public partial class MainWindow : Gtk.Window
 				{
 					System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
 					_plotView.Model = _plotMSD;
-					_plotView.ShowNow();
 					break;
 				}
 			case 2: // test
 				{
 					System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
-					_plotView.Model = _plotTest;
-					_plotView.ShowNow();
+					_plotView.Model = _plotC;
 					break;
 				}
 

@@ -50,6 +50,12 @@ namespace Diplom
 
 		private global::Gtk.Label GtkLabel3;
 
+		private global::Gtk.HBox hbox6;
+
+		private global::Gtk.Label label6;
+
+		private global::Gtk.Entry entryMSD;
+
 		private global::Gtk.VBox vbox4;
 
 		private global::Gtk.VBox vbox9;
@@ -69,7 +75,10 @@ namespace Diplom
 			global::Stetic.Gui.Initialize(this);
 			// Widget Diplom.SettingsWindows
 			this.Name = "Diplom.SettingsWindows";
+			this.Title = global::Mono.Unix.Catalog.GetString("Настройки");
+			this.Icon = global::Stetic.IconLoader.LoadIcon(this, "gtk-preferences", global::Gtk.IconSize.Menu);
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
+			this.BorderWidth = ((uint)(3));
 			// Internal child Diplom.SettingsWindows.VBox
 			global::Gtk.VBox w1 = this.VBox;
 			w1.Name = "dialog1_VBox";
@@ -158,10 +167,11 @@ namespace Diplom
 			w7.Expand = false;
 			w7.Fill = false;
 			// Container child vbox11.Gtk.Box+BoxChild
-			this.tempStep = new global::Gtk.SpinButton(0D, 100D, 1D);
+			this.tempStep = new global::Gtk.SpinButton(-10D, 100D, 1D);
 			this.tempStep.CanFocus = true;
 			this.tempStep.Name = "tempStep";
 			this.tempStep.Adjustment.PageIncrement = 10D;
+			this.tempStep.Adjustment.PageSize = -10D;
 			this.tempStep.ClimbRate = 1D;
 			this.tempStep.Numeric = true;
 			this.vbox11.Add(this.tempStep);
@@ -278,6 +288,34 @@ namespace Diplom
 			w22.Expand = false;
 			w22.Fill = false;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
+			this.hbox6 = new global::Gtk.HBox();
+			this.hbox6.Name = "hbox6";
+			this.hbox6.Homogeneous = true;
+			this.hbox6.Spacing = 6;
+			// Container child hbox6.Gtk.Box+BoxChild
+			this.label6 = new global::Gtk.Label();
+			this.label6.Name = "label6";
+			this.label6.LabelProp = global::Mono.Unix.Catalog.GetString("СКО");
+			this.hbox6.Add(this.label6);
+			global::Gtk.Box.BoxChild w23 = ((global::Gtk.Box.BoxChild)(this.hbox6[this.label6]));
+			w23.Position = 0;
+			w23.Expand = false;
+			w23.Fill = false;
+			// Container child hbox6.Gtk.Box+BoxChild
+			this.entryMSD = new global::Gtk.Entry();
+			this.entryMSD.CanFocus = true;
+			this.entryMSD.Name = "entryMSD";
+			this.entryMSD.IsEditable = true;
+			this.entryMSD.InvisibleChar = '●';
+			this.hbox6.Add(this.entryMSD);
+			global::Gtk.Box.BoxChild w24 = ((global::Gtk.Box.BoxChild)(this.hbox6[this.entryMSD]));
+			w24.Position = 1;
+			w1.Add(this.hbox6);
+			global::Gtk.Box.BoxChild w25 = ((global::Gtk.Box.BoxChild)(w1[this.hbox6]));
+			w25.Position = 1;
+			w25.Expand = false;
+			w25.Fill = false;
+			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.vbox4 = new global::Gtk.VBox();
 			this.vbox4.Name = "vbox4";
 			this.vbox4.Homogeneous = true;
@@ -297,39 +335,38 @@ namespace Diplom
 			this.label17.Name = "label17";
 			this.label17.LabelProp = global::Mono.Unix.Catalog.GetString("COM - порт");
 			this.hbox2.Add(this.label17);
-			global::Gtk.Box.BoxChild w23 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.label17]));
-			w23.Position = 0;
-			w23.Expand = false;
-			w23.Fill = false;
+			global::Gtk.Box.BoxChild w26 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.label17]));
+			w26.Position = 0;
+			w26.Expand = false;
+			w26.Fill = false;
 			// Container child hbox2.Gtk.Box+BoxChild
 			this.comboPort = global::Gtk.ComboBoxEntry.NewText();
 			this.comboPort.Name = "comboPort";
 			this.hbox2.Add(this.comboPort);
-			global::Gtk.Box.BoxChild w24 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.comboPort]));
-			w24.Position = 1;
-			w24.Expand = false;
-			w24.Fill = false;
-			this.vbox9.Add(this.hbox2);
-			global::Gtk.Box.BoxChild w25 = ((global::Gtk.Box.BoxChild)(this.vbox9[this.hbox2]));
-			w25.Position = 0;
-			w25.Expand = false;
-			w25.Fill = false;
-			this.vbox4.Add(this.vbox9);
-			global::Gtk.Box.BoxChild w26 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.vbox9]));
-			w26.Position = 0;
-			w26.Expand = false;
-			w26.Fill = false;
-			w1.Add(this.vbox4);
-			global::Gtk.Box.BoxChild w27 = ((global::Gtk.Box.BoxChild)(w1[this.vbox4]));
+			global::Gtk.Box.BoxChild w27 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.comboPort]));
 			w27.Position = 1;
-			w27.Expand = false;
-			w27.Fill = false;
+			this.vbox9.Add(this.hbox2);
+			global::Gtk.Box.BoxChild w28 = ((global::Gtk.Box.BoxChild)(this.vbox9[this.hbox2]));
+			w28.Position = 0;
+			w28.Expand = false;
+			w28.Fill = false;
+			w28.Padding = ((uint)(5));
+			this.vbox4.Add(this.vbox9);
+			global::Gtk.Box.BoxChild w29 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.vbox9]));
+			w29.Position = 0;
+			w29.Expand = false;
+			w29.Fill = false;
+			w1.Add(this.vbox4);
+			global::Gtk.Box.BoxChild w30 = ((global::Gtk.Box.BoxChild)(w1[this.vbox4]));
+			w30.Position = 2;
+			w30.Expand = false;
+			w30.Fill = false;
 			// Internal child Diplom.SettingsWindows.ActionArea
-			global::Gtk.HButtonBox w28 = this.ActionArea;
-			w28.Name = "dialog1_ActionArea";
-			w28.Spacing = 10;
-			w28.BorderWidth = ((uint)(5));
-			w28.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w31 = this.ActionArea;
+			w31.Name = "dialog1_ActionArea";
+			w31.Spacing = 10;
+			w31.BorderWidth = ((uint)(5));
+			w31.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button();
 			this.buttonCancel.CanDefault = true;
@@ -339,9 +376,9 @@ namespace Diplom
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget(this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w29 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w28[this.buttonCancel]));
-			w29.Expand = false;
-			w29.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w32 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w31[this.buttonCancel]));
+			w32.Expand = false;
+			w32.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button();
 			this.buttonOk.CanDefault = true;
@@ -351,16 +388,16 @@ namespace Diplom
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget(this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w30 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w28[this.buttonOk]));
-			w30.Position = 1;
-			w30.Expand = false;
-			w30.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w33 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w31[this.buttonOk]));
+			w33.Position = 1;
+			w33.Expand = false;
+			w33.Fill = false;
 			if ((this.Child != null))
 			{
 				this.Child.ShowAll();
 			}
-			this.DefaultWidth = 462;
-			this.DefaultHeight = 235;
+			this.DefaultWidth = 400;
+			this.DefaultHeight = 269;
 			this.Show();
 			this.buttonCancel.Clicked += new global::System.EventHandler(this.OnButtonCancelClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler(this.OnButtonOkClicked);

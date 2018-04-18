@@ -106,6 +106,9 @@ namespace Diplom
 			if (read.Length == 0)
 				return "";
 			//-------------
+
+
+			//Console.WriteLine(System.Text.ASCIIEncoding.ASCII.GetString(read));
 			return System.Text.ASCIIEncoding.ASCII.GetString(read);
 		}
 
@@ -200,7 +203,11 @@ namespace Diplom
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message + " Повторно подключаюсь.");
+				if (Diplom.MainProgramm.SetFlagThread == false)
+					return;
+				Console.WriteLine(ex.Message + " Повторно подключусь через 5 сек");
+				System.Threading.Thread.Sleep(5000);
+
 				Connect(globalHostname);
 			}
 		}
@@ -251,6 +258,8 @@ namespace Diplom
 			return freq;
 		}
 
+
+
 		/// <summary>
 		/// Получение измеренных данных с канала channel, параметра матрицы рассеяния Sp в виде Re(Sp), Im(Sp)
 		/// Используем так: Scomplex[i].Real и Scomplex[i].Imaginary  =  Re_i + Im_i
@@ -268,12 +277,12 @@ namespace Diplom
 			while (input.Length < 1);//Выполняем пока ответ пришел пустой
 			//---END----
 
-			List<string> freq_string = input.Split(',').ToList();
-			List<double> freq = freq_string.Select(x => double.Parse(x)).ToList();
+			List<string> sp_string = input.Split(',').ToList();
+			List<double> sp = sp_string.Select(x => double.Parse(x)).ToList();
 			List<Complex> Scomplex = new List<Complex>();
-			for (int i = 0; i < freq.Count; i += 2)
+			for (int i = 0; i < sp.Count; i += 2)
 			{
-				Scomplex.Add(new Complex(freq[i], freq[i + 1]));//амплитуда, и фаза в  виде Re(Sp) Im(Sp)
+				Scomplex.Add(new Complex(sp[i], sp[i + 1]));//амплитуда, и фаза в  виде Re(Sp) Im(Sp)
 				 
 			}
 
@@ -314,6 +323,8 @@ namespace Diplom
 		public double MSD(List<Complex> St, List<Complex> St1)
 		{
 			double rezult = 0;
+			if (St.Count != St1.Count)
+				return 0;
 			for (int i = 0; i < St.Count; i++)
 			{
 				rezult += Math.Pow((St1[i].Real - St[i].Real) + (St1[i].Imaginary - St[i].Imaginary), 2);	//sum(((aj-a1j)+(bij-bi1j))^2) где j номер элемента, i - мнимая единица
