@@ -5,59 +5,59 @@ namespace Diplom
 	public partial class SettingsWindows
 	{
 		private global::Gtk.HBox hbox5;
-		
+
 		private global::Gtk.Frame frame2;
-		
+
 		private global::Gtk.Alignment GtkAlignment2;
-		
+
 		private global::Gtk.HBox hbox6;
-		
+
 		private global::Gtk.VBox vbox9;
-		
+
 		private global::Gtk.Label label17;
-		
+
 		private global::Gtk.Label label18;
-		
+
 		private global::Gtk.Label label19;
-		
+
 		private global::Gtk.VBox vbox6;
-		
+
 		private global::Gtk.SpinButton tempBegin;
-		
+
 		private global::Gtk.SpinButton tempEnd;
-		
+
 		private global::Gtk.SpinButton tempStep;
-		
+
 		private global::Gtk.Label Frame1;
-		
+
 		private global::Gtk.Frame frame3;
-		
+
 		private global::Gtk.Alignment GtkAlignment3;
-		
+
 		private global::Gtk.HBox hbox7;
-		
+
 		private global::Gtk.VBox vbox7;
-		
+
 		private global::Gtk.Label label14;
-		
+
 		private global::Gtk.Label label15;
-		
+
 		private global::Gtk.VBox vbox8;
-		
+
 		private global::Gtk.SpinButton timeSp;
-		
+
 		private global::Gtk.SpinButton timeSp1;
-		
+
 		private global::Gtk.Label GtkLabel3;
-		
+
 		private global::Gtk.HBox hbox2;
-		
+
 		private global::Gtk.Label label1;
-		
+
 		private global::Gtk.ComboBoxEntry comboPort;
-		
+
 		private global::Gtk.Button buttonCancel;
-		
+
 		private global::Gtk.Button buttonOk;
 
 		protected virtual void Build ()

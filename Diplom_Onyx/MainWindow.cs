@@ -65,8 +65,8 @@ public partial class MainWindow : Gtk.Window
 		this.comboS.Active = 0;
 		//Diplom.MainClass.PlotTest (this.widgetplot1.ShowPlot);
 		//System.Threading.Thread.Sleep(5000);
-		Thread threadtest = new Thread(new ThreadStart(test));
-		threadtest.Start();
+		//Thread threadtest = new Thread(new ThreadStart(test));
+		//threadtest.Start();
 	}
 
 	protected void OnDeleteEvent(object sender, DeleteEventArgs a)
@@ -123,7 +123,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		Gtk.Application.Invoke(delegate
 		{
-			s = System.DateTime.Now.ToLongTimeString() + s + "\n";
+			s = System.DateTime.Now.ToLongTimeString() +" " + s + "\n";
 			//textview3.Buffer.Insert(textview3.Buffer.StartIter, s);
 			var ti = textview3.Buffer.StartIter;
 			textview3.Buffer.Insert(ref ti, s);
@@ -159,25 +159,30 @@ public partial class MainWindow : Gtk.Window
 	/// </summary>
 	protected void OnButStopClicked(object sender, EventArgs e)
 	{
-		if (threadStart == null)                            // если поток не создан, то ничего не делаем
-			return;
-		if (Diplom.MainProgramm.flagZero.IsAlive)	// отключаем таймер, при котором температура в камере меняется по его истечению
+		try
 		{
-			Diplom.MainProgramm.flagZero.Abort();
-			Diplom.MainProgramm.flagZero.Join();
-		}
-		if (threadStart.IsAlive)
-		{
-			Diplom.MainProgramm.SetFlagThread = false;          // ЗАкрытие потока
-			threadStart.Abort();                                // Остановка
-			threadStart.Join();                                 // ждем пока не закроется
-			if (Diplom.MainProgramm.Com.CheckOpen())            // закрываем ком порт, если включен
-				Diplom.MainProgramm.Com.Dispose();
-			if (Diplom.MainProgramm.telnet.IsOpen)            // закрываем ком порт, если включен
-				Diplom.MainProgramm.telnet.Dispose();
-			butStart.Sensitive = true;                          // Включаем кнопку старт
+			if (threadStart == null)                            // если поток не создан, то ничего не делаем
+				return;
+			if (Diplom.MainProgramm.flagZero.IsAlive)   // отключаем таймер, при котором температура в камере меняется по его истечению
+			{
 
+				Diplom.MainProgramm.flagZero.Abort();
+				Diplom.MainProgramm.flagZero.Join();
+			}
+			if (threadStart.IsAlive)
+			{
+				Diplom.MainProgramm.SetFlagThread = false;          // ЗАкрытие потока
+				threadStart.Abort();                                // Остановка
+				threadStart.Join();                                 // ждем пока не закроется
+				if (Diplom.MainProgramm.Com.CheckOpen())            // закрываем ком порт, если включен
+					Diplom.MainProgramm.Com.Dispose();
+				if (Diplom.MainProgramm.telnet.IsOpen)            // закрываем ком порт, если включен
+					Diplom.MainProgramm.telnet.Dispose();
+				butStart.Sensitive = true;                          // Включаем кнопку старт
+
+			}
 		}
+		catch(Exception ex){ return; }
 	}
 	/// <summary>
 	/// Два графика. Первый и второй такойже только после некоторго времени
@@ -251,19 +256,30 @@ public partial class MainWindow : Gtk.Window
 		});
 
 	}
+	/// <summary>
+	/// Очистка графика С
+	/// </summary>
+	public void ChartingCClear()
+	{
+		pointsC.Clear();
+		_plotC.Series.Clear();
+	}
+	public List<DataPoint> pointsC = new List<DataPoint>();
 	public void ChartingC(List<Complex> C, List<Complex> Ct)
 	{
-		var pointsMSD = new List<DataPoint>();
+		
 		//points.Add(new DataPoint(17500, 14350));
 		double sum = 0.0;
-		for (int i = 0; i < C.Count; i++)
+		for (int i = 0; i < Ct.Count; i++)
 		{
-			sum += C[i].Real - C[i].Real + Ct[i].Imaginary * Ct[i].Imaginary;
+			sum += C[0].Real - Ct[i].Real + C[0].Imaginary - Ct[i].Imaginary;
 		}
-		pointsMSD.Add(new DataPoint()); // Правильно
-		var areaSeries = new LineSeries();
-		areaSeries.ItemsSource = pointsMSD;
+		Diplom.MainProgramm.timeSecond += DateTime.Now.Second;
+		pointsC.Add(new DataPoint(Convert.ToDouble(Diplom.MainProgramm.timeSecond), sum ));
 
+		var areaSeries = new LineSeries();
+		areaSeries.ItemsSource = pointsC;
+		areaSeries.Color = OxyColor.FromRgb(1,0,0);
 		_plotC.Series.Add(areaSeries);
 		Gtk.Application.Invoke(delegate
 		{
@@ -281,18 +297,18 @@ public partial class MainWindow : Gtk.Window
 			case 0: // S12
 				{
 					_plotView.Model = _plotS12;
-					System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
+					//System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
 					break;
 				}
 			case 1: //MSD
 				{
-					System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
+					//System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
 					_plotView.Model = _plotMSD;
 					break;
 				}
-			case 2: // test
+			case 2: // СКО
 				{
-					System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
+					//System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
 					_plotView.Model = _plotC;
 					break;
 				}

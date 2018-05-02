@@ -9,15 +9,14 @@ using System.Windows; // for vector
 using System.Numerics;
 using System.Net.NetworkInformation;
 
-namespace Diplom
+namespace Diplom_Windows
 {
 	
-
+	#region TelnetConnection - no need to edit
 
 	/// <summary>
 	/// Telnet Connection on port 5025 to an instrument
 	/// </summary>
-	#region TelnetConnection - no need to edit
 	public class TelnetConnection : IDisposable
 	{
 		public static string globalHostname = "192.168.0.2";
@@ -32,7 +31,6 @@ namespace Diplom
 		public bool IsOpen { get { return m_IsOpen; } }
 		public TelnetConnection() { }
 		public TelnetConnection(bool open) : this("localhost", true) { }
-
 		public TelnetConnection(string host, bool open)
 		{
 			if (open)
@@ -106,9 +104,6 @@ namespace Diplom
 			if (read.Length == 0)
 				return "";
 			//-------------
-
-
-			//Console.WriteLine(System.Text.ASCIIEncoding.ASCII.GetString(read));
 			return System.Text.ASCIIEncoding.ASCII.GetString(read);
 		}
 
@@ -203,11 +198,7 @@ namespace Diplom
 			}
 			catch (Exception ex)
 			{
-				if (Diplom.MainProgramm.SetFlagThread == false)
-					return;
-				Diplom.MainClass.win.Log(ex.Message + " Повторно подключусь через 5 сек");
-				System.Threading.Thread.Sleep(5000);
-
+				Console.WriteLine(ex.Message + " Повторно подключаюсь.");
 				Connect(globalHostname);
 			}
 		}
@@ -258,8 +249,6 @@ namespace Diplom
 			return freq;
 		}
 
-
-
 		/// <summary>
 		/// Получение измеренных данных с канала channel, параметра матрицы рассеяния Sp в виде Re(Sp), Im(Sp)
 		/// Используем так: Scomplex[i].Real и Scomplex[i].Imaginary  =  Re_i + Im_i
@@ -272,17 +261,17 @@ namespace Diplom
 			{
 				WriteLine(":SENS" + channel + ":DATA:CORR? " + Sp);
 				input = Read();
-				//Console.WriteLine("input.Length " + input);
+				Console.WriteLine("input.Length " + input);
 			}
 			while (input.Length < 1);//Выполняем пока ответ пришел пустой
 			//---END----
 
-			List<string> sp_string = input.Split(',').ToList();
-			List<double> sp = sp_string.Select(x => double.Parse(x)).ToList();
+			List<string> freq_string = input.Split(',').ToList();
+			List<double> freq = freq_string.Select(x => double.Parse(x)).ToList();
 			List<Complex> Scomplex = new List<Complex>();
-			for (int i = 0; i < sp.Count; i += 2)
+			for (int i = 0; i < freq.Count; i += 2)
 			{
-				Scomplex.Add(new Complex(sp[i], sp[i + 1]));//амплитуда, и фаза в  виде Re(Sp) Im(Sp)
+				Scomplex.Add(new Complex(freq[i], freq[i + 1]));//амплитуда, и фаза в  виде Re(Sp) Im(Sp)
 				 
 			}
 
@@ -323,8 +312,6 @@ namespace Diplom
 		public double MSD(List<Complex> St, List<Complex> St1)
 		{
 			double rezult = 0;
-			if (St.Count != St1.Count)
-				return 0;
 			for (int i = 0; i < St.Count; i++)
 			{
 				rezult += Math.Pow((St1[i].Real - St[i].Real) + (St1[i].Imaginary - St[i].Imaginary), 2);	//sum(((aj-a1j)+(bij-bi1j))^2) где j номер элемента, i - мнимая единица

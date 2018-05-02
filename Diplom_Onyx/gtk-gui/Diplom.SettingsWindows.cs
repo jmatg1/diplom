@@ -109,6 +109,7 @@ namespace Diplom
 			// Container child vbox10.Gtk.Box+BoxChild
 			this.label11 = new global::Gtk.Label();
 			this.label11.Name = "label11";
+			this.label11.Xalign = 0F;
 			this.label11.LabelProp = global::Mono.Unix.Catalog.GetString("Начальная");
 			this.vbox10.Add(this.label11);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.vbox10[this.label11]));
@@ -116,6 +117,7 @@ namespace Diplom
 			// Container child vbox10.Gtk.Box+BoxChild
 			this.label12 = new global::Gtk.Label();
 			this.label12.Name = "label12";
+			this.label12.Xalign = 0F;
 			this.label12.LabelProp = global::Mono.Unix.Catalog.GetString("Конечная");
 			this.vbox10.Add(this.label12);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.vbox10[this.label12]));
@@ -125,6 +127,7 @@ namespace Diplom
 			// Container child vbox10.Gtk.Box+BoxChild
 			this.label13 = new global::Gtk.Label();
 			this.label13.Name = "label13";
+			this.label13.Xalign = 0F;
 			this.label13.LabelProp = global::Mono.Unix.Catalog.GetString("Шаг");
 			this.vbox10.Add(this.label13);
 			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox10[this.label13]));
@@ -215,6 +218,7 @@ namespace Diplom
 			// Container child vbox12.Gtk.Box+BoxChild
 			this.label14 = new global::Gtk.Label();
 			this.label14.Name = "label14";
+			this.label14.Xalign = 0F;
 			this.label14.LabelProp = global::Mono.Unix.Catalog.GetString("Измерений");
 			this.vbox12.Add(this.label14);
 			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.vbox12[this.label14]));
@@ -224,6 +228,7 @@ namespace Diplom
 			// Container child vbox12.Gtk.Box+BoxChild
 			this.label15 = new global::Gtk.Label();
 			this.label15.Name = "label15";
+			this.label15.Xalign = 0F;
 			this.label15.LabelProp = global::Mono.Unix.Catalog.GetString("Период");
 			this.vbox12.Add(this.label15);
 			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.vbox12[this.label15]));
@@ -295,6 +300,7 @@ namespace Diplom
 			// Container child hbox6.Gtk.Box+BoxChild
 			this.label6 = new global::Gtk.Label();
 			this.label6.Name = "label6";
+			this.label6.Xalign = 0F;
 			this.label6.LabelProp = global::Mono.Unix.Catalog.GetString("СКО");
 			this.hbox6.Add(this.label6);
 			global::Gtk.Box.BoxChild w23 = ((global::Gtk.Box.BoxChild)(this.hbox6[this.label6]));
@@ -313,8 +319,6 @@ namespace Diplom
 			w1.Add(this.hbox6);
 			global::Gtk.Box.BoxChild w25 = ((global::Gtk.Box.BoxChild)(w1[this.hbox6]));
 			w25.Position = 1;
-			w25.Expand = false;
-			w25.Fill = false;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.vbox4 = new global::Gtk.VBox();
 			this.vbox4.Name = "vbox4";
@@ -333,6 +337,7 @@ namespace Diplom
 			// Container child hbox2.Gtk.Box+BoxChild
 			this.label17 = new global::Gtk.Label();
 			this.label17.Name = "label17";
+			this.label17.Xalign = 0F;
 			this.label17.LabelProp = global::Mono.Unix.Catalog.GetString("COM - порт");
 			this.hbox2.Add(this.label17);
 			global::Gtk.Box.BoxChild w26 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.label17]));

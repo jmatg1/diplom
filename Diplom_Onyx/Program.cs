@@ -133,22 +133,24 @@ namespace Diplom
 		public static TelnetConnection telnet = new TelnetConnection();
 		public static ModbusASCIIInterface Com = new ModbusASCIIInterface();
 		public static Thread flagZero; // Должен быть глобальным чтобы можно было завершить кнопкой стоп 											// Поток, в котором идет время Sp1, после истечение которого, меняем температуру в камере
+		public static int timeSecond;
 		public void Start()
 		{
-
+			
 			int tek_temp;                                       // текущая тмпература в камере
 			List<Double> valueMSD = new List<Double>();      //Среднее квадратичное отклонение
 			List<Complex> C = new List<Complex>();           //  это первая матрица рассеивания после готовой уставке(уст = тек темп в кам)
+			List<Complex> Ct = new List<Complex>();           //  это 
 
 
 			for (int i = MainClass.tempBegin; i <= MainClass.tempEnd; i += MainClass.tempStep)
 			{
 				flagZero = new Thread(new ThreadStart(FuncFlagZero));   // Создаем поток, который отсчитывает время timeSp1, по истечению времени уставка сменится
 				flagZero.IsBackground = true;                           //теперь он фоновый и его можно закрыть по закытию  программы
-				flagMsdZero = true;
+				flagMsdZero = true;										// если лож то выходим из цикла и меняем уставку
 				Com.initPort(MainClass.comPort);
 				LogWriteLine("Подключились к " + MainClass.comPort);
-
+				timeSecond = DateTime.Now.Second;
 				if (Com.setTargetTemperature(i) == true)
 				{
 					LogWriteLine("Установили УСТАВКУ: " + i + ". Ждем 5 сек. когда Уст. = Тек. Темпер.");
@@ -215,10 +217,11 @@ namespace Diplom
 					LogWriteLine("Обновили график СКО");
 					ShowMSD(valueMSD);                              // 
 					LogWriteLine("Обновили график С12");
+					//Ct.AddRange(S12t);
 					ShowC(C, S12t);
 					//ЗАпись в файл
 					WriteFileOutFreq(freq);
-					WriteFileOutSp(S12,S12t);
+					WriteFileOutSp(S12, S12t);
 
 					if (valueMSD[valueMSD.Count - 1] <= MainClass.entryMSD)
 					{
@@ -256,13 +259,21 @@ namespace Diplom
 		/// <param name="Sp">Sp.</param>
 		public void WriteFileOutFreq(List<double> Freq)
 		{
-
-			for (int i = 0; i < Freq.Count; i++)
+			try
 			{
-				File.AppendAllText(MainClass.pathOutFileFreq, Freq[i].ToString() + Environment.NewLine, Encoding.UTF8);
+				string testFreq = "";
+				for (int i = 0; i < Freq.Count; i++)
+				{
+					testFreq += Freq[i].ToString() + Environment.NewLine;
+					//File.AppendAllText(MainClass.pathOutFileFreq, Freq[i].ToString() + Environment.NewLine, Encoding.UTF8);
+				}
+				File.AppendAllText(MainClass.pathOutFileFreq, testFreq + Environment.NewLine, Encoding.UTF8);
 			}
-			File.AppendAllText(MainClass.pathOutFileFreq, Environment.NewLine, Encoding.UTF8);
-		
+			catch
+			{
+				Diplom.MainClass.win.Log("Ошибка записи в файл freq_.txt");
+			}
+
 		}
 		/// <summary>
 		/// Записываем в файл матрицу рассеивания одну штуку
@@ -271,7 +282,7 @@ namespace Diplom
 		public void WriteFileOutSp(List<Complex> Sp)
 		{
 
-				for (int i = 0; i < Sp.Count; i ++)
+			for (int i = 0; i < Sp.Count; i++)
 			{
 				File.AppendAllText(MainClass.pathOutFileSp, Sp[i].Real.ToString() + "," + Sp[i].Imaginary.ToString() + Environment.NewLine, Encoding.UTF8);
 			}
@@ -279,22 +290,29 @@ namespace Diplom
 
 		}
 		/// <summary>
-		/// Записываем в файл две матрицы. 
+		/// Записываем в файл две матрицы. Точки записываются так. Sp1, Spt1, Sp2, Spt2 
 		/// </summary>
 		/// <param name="Sp">Sp.</param>
 		/// <param name="Spt">Spt.</param>
-	public void WriteFileOutSp(List<Complex> Sp, List<Complex> Spt)
-	{
-
-	for (int i = 0; i < Sp.Count; i++)
-	{
-		File.AppendAllText(MainClass.pathOutFileSp, Sp[i].Real.ToString() + "," + Sp[i].Imaginary.ToString() + Environment.NewLine, Encoding.UTF8);
-				File.AppendAllText(MainClass.pathOutFileSp, Spt[i].Real.ToString() + "," + Spt[i].Imaginary.ToString() + Environment.NewLine, Encoding.UTF8);
-	}
-	File.AppendAllText(MainClass.pathOutFileSp, Environment.NewLine, Encoding.UTF8);
+		public void WriteFileOutSp(List<Complex> Sp, List<Complex> Spt)
+		{
+			try
+			{
+				string textSpSpt = "";
+				for (int i = 0; i < Sp.Count; i++)
+				{
+					textSpSpt+=		Sp[i].Real.ToString() + "," + Sp[i].Imaginary.ToString() + Environment.NewLine +
+					                Spt[i].Real.ToString() + "," + Spt[i].Imaginary.ToString() + Environment.NewLine;
+					//File.AppendAllText(MainClass.pathOutFileSp, Sp[i].Real.ToString() + "," + Sp[i].Imaginary.ToString() + Environment.NewLine, Encoding.UTF8);
+					//File.AppendAllText(MainClass.pathOutFileSp, Spt[i].Real.ToString() + "," + Spt[i].Imaginary.ToString() + Environment.NewLine, Encoding.UTF8);
+				}
+				File.AppendAllText(MainClass.pathOutFileSp,textSpSpt + Environment.NewLine, Encoding.UTF8);
+			}
+			catch
+			{
+				Diplom.MainClass.win.Log("Ошибка записи в файл Sp_.txt");
+			}
 		}
-
-
 	}
 
 }

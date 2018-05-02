@@ -21,7 +21,37 @@ public partial class MainWindow
 	
 	private global::Gtk.MenuBar menubar2;
 	
-	private global::Gtk.DrawingArea drawingarea1;
+	private global::Gtk.HBox hbox1;
+	
+	private global::Gtk.DrawingArea drawingarea3;
+	
+	private global::Gtk.VBox vbox2;
+	
+	private global::Gtk.VBox vbox3;
+	
+	private global::Gtk.VBox vbox4;
+	
+	private global::Gtk.HBox hbox2;
+	
+	private global::Gtk.Label Уставка;
+	
+	private global::Gtk.Label label14;
+	
+	private global::Gtk.Label label16;
+	
+	private global::Gtk.HBox hbox3;
+	
+	private global::Gtk.Label label17;
+	
+	private global::Gtk.Label label18;
+	
+	private global::Gtk.Label label19;
+	
+	private global::Gtk.ScrolledWindow GtkScrolledWindow1;
+	
+	private global::Gtk.TextView textview3;
+	
+	private global::Gtk.Button button118;
 	
 	private global::Gtk.Statusbar statusbar1;
 	
@@ -62,6 +92,7 @@ public partial class MainWindow
 		this.AddAccelGroup (this.UIManager.AccelGroup);
 		this.Name = "MainWindow";
 		this.Title = global::Mono.Unix.Catalog.GetString ("MainWindow");
+		this.Icon = global::Stetic.IconLoader.LoadIcon (this, "stock_draw-line-connector-with-arrows", global::Gtk.IconSize.Menu);
 		this.WindowPosition = ((global::Gtk.WindowPosition)(1));
 		// Container child MainWindow.Gtk.Container+ContainerChild
 		this.vbox1 = new global::Gtk.VBox ();
@@ -79,11 +110,140 @@ public partial class MainWindow
 		w2.Expand = false;
 		w2.Fill = false;
 		// Container child vbox1.Gtk.Box+BoxChild
-		this.drawingarea1 = new global::Gtk.DrawingArea ();
-		this.drawingarea1.Name = "drawingarea1";
-		this.vbox1.Add (this.drawingarea1);
-		global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.drawingarea1]));
-		w3.Position = 1;
+		this.hbox1 = new global::Gtk.HBox ();
+		this.hbox1.Name = "hbox1";
+		this.hbox1.Homogeneous = true;
+		this.hbox1.Spacing = 8;
+		// Container child hbox1.Gtk.Box+BoxChild
+		this.drawingarea3 = new global::Gtk.DrawingArea ();
+		this.drawingarea3.Name = "drawingarea3";
+		this.hbox1.Add (this.drawingarea3);
+		global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.drawingarea3]));
+		w3.Position = 0;
+		// Container child hbox1.Gtk.Box+BoxChild
+		this.vbox2 = new global::Gtk.VBox ();
+		this.vbox2.Name = "vbox2";
+		this.vbox2.Homogeneous = true;
+		this.vbox2.Spacing = 6;
+		// Container child vbox2.Gtk.Box+BoxChild
+		this.vbox3 = new global::Gtk.VBox ();
+		this.vbox3.Name = "vbox3";
+		this.vbox3.Spacing = 6;
+		// Container child vbox3.Gtk.Box+BoxChild
+		this.vbox4 = new global::Gtk.VBox ();
+		this.vbox4.Name = "vbox4";
+		this.vbox4.Spacing = 6;
+		// Container child vbox4.Gtk.Box+BoxChild
+		this.hbox2 = new global::Gtk.HBox ();
+		this.hbox2.Name = "hbox2";
+		this.hbox2.Homogeneous = true;
+		this.hbox2.Spacing = 6;
+		// Container child hbox2.Gtk.Box+BoxChild
+		this.Уставка = new global::Gtk.Label ();
+		this.Уставка.Name = "Уставка";
+		this.Уставка.LabelProp = global::Mono.Unix.Catalog.GetString ("label13");
+		this.hbox2.Add (this.Уставка);
+		global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.Уставка]));
+		w4.Position = 0;
+		w4.Expand = false;
+		w4.Fill = false;
+		// Container child hbox2.Gtk.Box+BoxChild
+		this.label14 = new global::Gtk.Label ();
+		this.label14.Name = "label14";
+		this.label14.LabelProp = global::Mono.Unix.Catalog.GetString ("label14");
+		this.hbox2.Add (this.label14);
+		global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.label14]));
+		w5.Position = 1;
+		w5.Expand = false;
+		w5.Fill = false;
+		// Container child hbox2.Gtk.Box+BoxChild
+		this.label16 = new global::Gtk.Label ();
+		this.label16.Name = "label16";
+		this.label16.LabelProp = global::Mono.Unix.Catalog.GetString ("label16");
+		this.hbox2.Add (this.label16);
+		global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.label16]));
+		w6.Position = 2;
+		w6.Expand = false;
+		w6.Fill = false;
+		this.vbox4.Add (this.hbox2);
+		global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox2]));
+		w7.Position = 0;
+		w7.Expand = false;
+		w7.Fill = false;
+		// Container child vbox4.Gtk.Box+BoxChild
+		this.hbox3 = new global::Gtk.HBox ();
+		this.hbox3.Name = "hbox3";
+		this.hbox3.Homogeneous = true;
+		this.hbox3.Spacing = 6;
+		// Container child hbox3.Gtk.Box+BoxChild
+		this.label17 = new global::Gtk.Label ();
+		this.label17.Name = "label17";
+		this.label17.LabelProp = global::Mono.Unix.Catalog.GetString ("label17");
+		this.hbox3.Add (this.label17);
+		global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label17]));
+		w8.Position = 0;
+		w8.Expand = false;
+		w8.Fill = false;
+		// Container child hbox3.Gtk.Box+BoxChild
+		this.label18 = new global::Gtk.Label ();
+		this.label18.Name = "label18";
+		this.label18.LabelProp = global::Mono.Unix.Catalog.GetString ("label18");
+		this.hbox3.Add (this.label18);
+		global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label18]));
+		w9.Position = 1;
+		w9.Expand = false;
+		w9.Fill = false;
+		// Container child hbox3.Gtk.Box+BoxChild
+		this.label19 = new global::Gtk.Label ();
+		this.label19.Name = "label19";
+		this.label19.LabelProp = global::Mono.Unix.Catalog.GetString ("label19");
+		this.hbox3.Add (this.label19);
+		global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label19]));
+		w10.Position = 2;
+		w10.Expand = false;
+		w10.Fill = false;
+		this.vbox4.Add (this.hbox3);
+		global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox3]));
+		w11.Position = 1;
+		w11.Expand = false;
+		w11.Fill = false;
+		this.vbox3.Add (this.vbox4);
+		global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.vbox4]));
+		w12.Position = 0;
+		w12.Expand = false;
+		w12.Fill = false;
+		// Container child vbox3.Gtk.Box+BoxChild
+		this.GtkScrolledWindow1 = new global::Gtk.ScrolledWindow ();
+		this.GtkScrolledWindow1.Name = "GtkScrolledWindow1";
+		this.GtkScrolledWindow1.ShadowType = ((global::Gtk.ShadowType)(1));
+		// Container child GtkScrolledWindow1.Gtk.Container+ContainerChild
+		this.textview3 = new global::Gtk.TextView ();
+		this.textview3.CanFocus = true;
+		this.textview3.Name = "textview3";
+		this.GtkScrolledWindow1.Add (this.textview3);
+		this.vbox3.Add (this.GtkScrolledWindow1);
+		global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.GtkScrolledWindow1]));
+		w14.Position = 1;
+		// Container child vbox3.Gtk.Box+BoxChild
+		this.button118 = new global::Gtk.Button ();
+		this.button118.CanFocus = true;
+		this.button118.Name = "button118";
+		this.button118.UseUnderline = true;
+		this.button118.Label = global::Mono.Unix.Catalog.GetString ("GtkButton");
+		this.vbox3.Add (this.button118);
+		global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.button118]));
+		w15.Position = 2;
+		w15.Expand = false;
+		w15.Fill = false;
+		this.vbox2.Add (this.vbox3);
+		global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.vbox3]));
+		w16.Position = 0;
+		this.hbox1.Add (this.vbox2);
+		global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.vbox2]));
+		w17.Position = 1;
+		this.vbox1.Add (this.hbox1);
+		global::Gtk.Box.BoxChild w18 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox1]));
+		w18.Position = 1;
 		// Container child vbox1.Gtk.Box+BoxChild
 		this.statusbar1 = new global::Gtk.Statusbar ();
 		this.statusbar1.Sensitive = false;
@@ -95,30 +255,30 @@ public partial class MainWindow
 		this.labelCom.Name = "labelCom";
 		this.labelCom.LabelProp = global::Mono.Unix.Catalog.GetString ("COMn: off");
 		this.statusbar1.Add (this.labelCom);
-		global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelCom]));
-		w4.Position = 1;
-		w4.Expand = false;
-		w4.Fill = false;
+		global::Gtk.Box.BoxChild w19 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelCom]));
+		w19.Position = 1;
+		w19.Expand = false;
+		w19.Fill = false;
 		// Container child statusbar1.Gtk.Box+BoxChild
 		this.labelTelnet = new global::Gtk.Label ();
 		this.labelTelnet.Name = "labelTelnet";
 		this.labelTelnet.LabelProp = global::Mono.Unix.Catalog.GetString ("192.168.0.2: on");
 		this.statusbar1.Add (this.labelTelnet);
-		global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelTelnet]));
-		w5.Position = 2;
-		w5.Expand = false;
-		w5.Fill = false;
+		global::Gtk.Box.BoxChild w20 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelTelnet]));
+		w20.Position = 2;
+		w20.Expand = false;
+		w20.Fill = false;
 		this.vbox1.Add (this.statusbar1);
-		global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.statusbar1]));
-		w6.Position = 2;
-		w6.Expand = false;
-		w6.Fill = false;
+		global::Gtk.Box.BoxChild w21 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.statusbar1]));
+		w21.Position = 2;
+		w21.Expand = false;
+		w21.Fill = false;
 		this.Add (this.vbox1);
 		if ((this.Child != null)) {
 			this.Child.ShowAll ();
 		}
-		this.DefaultWidth = 460;
-		this.DefaultHeight = 300;
+		this.DefaultWidth = 987;
+		this.DefaultHeight = 480;
 		this.Show ();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 		this.CloseAction.Activated += new global::System.EventHandler (this.OnActionSettingsActivated);

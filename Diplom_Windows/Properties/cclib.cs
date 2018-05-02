@@ -3,28 +3,21 @@ using System.IO.Ports;
 using System.Text;
 using System.Threading;
 
-namespace Diplom
+namespace Diplom_Windows
 {
 
-	public class ModbusASCIIInterface : IDisposable
+	class ModbusASCIIInterface
 	{
 
-  #region Ком порт. Настройки, отправка, чтение.
+
 		public static SerialPort comport; // com port
 		public static string number; // номер порта, применяется в catch для воостановление соединения 
 		public static string ComReply = ""; // строка ответа компорта
 		public static int ReadTimeout = 10000; // время ожидания ответа
 
-		public delegate void ConnectionDelegate();
-
-
 		public ModbusASCIIInterface()
 		{
 			comport = new SerialPort();
-		}
-		public void Dispose()
-		{
-			Close();
 		}
 		/// <summary>
 		/// Инициализация порта
@@ -33,32 +26,24 @@ namespace Diplom
 		{
 			try
 			{
-				if (CheckOpen())
-					return true;
 				// настройки порта
-				//number = num; // Console Version
-				number = MainClass.comPort; // Windows version
+				number = num;
 				comport.PortName = num;
 				comport.BaudRate = 9600;
 				comport.DataBits = 8;
 				comport.Parity = System.IO.Ports.Parity.None;
 				comport.StopBits = System.IO.Ports.StopBits.One;
-				comport.ReadTimeout = 5000;
-				comport.WriteTimeout = 5000;
-			//	comport.DataReceived += new SerialDataReceivedEventHandler(ComDataRec); // функция ComDataRec.. вызывается когда пришло сообщение на ком порт
+				comport.ReadTimeout = 10000;
+				comport.WriteTimeout = 10000;
+				comport.DataReceived += new SerialDataReceivedEventHandler(ComDataRec); // функция ComDataRec.. вызывается когда пришло сообщение на ком порт
 				comport.Open();
 
 
 			}
 			catch (Exception) // Выполняем это вслучаи любой ошибке
 			{
-				if (Diplom.MainProgramm.SetFlagThread == false)
-				{
-					return false;
-				}
-				Diplom.MainClass.win.Log (": ERROR: Порт " + number + " не отвечает. Открытие через 6 сек.");
-				//Console.WriteLine(System.DateTime.Now.ToLongTimeString() + ": ERROR: Порт " + num + " не отвечает. Открытие через 1 минуту." /*+ e.ToString()*/);
-				Thread.Sleep(6000);// 60 000 = 1 минута
+				Console.WriteLine(System.DateTime.Now.ToLongTimeString() + ": ERROR: Порт " + num + " не отвечает. Открытие через 1 минуту." /*+ e.ToString()*/);
+				Thread.Sleep(60000);// 60 000 = 1 минута
 				initPort(number);
 				return false;
 			}
@@ -81,40 +66,31 @@ namespace Diplom
 
 			SerialPort sp = (SerialPort)sender;
 			ComReply += sp.ReadExisting();
-			//Console.WriteLine (ComReply);
 		}
 		private string ComRead()
 		{
-			//int i = 1;
-			ComReply = comport.ReadLine();
-			Console.Write(ComReply);
-
-			//while (ComReply == null) //  выполняем цикл пока строка пуста, если прошло время, а соообщение так и не пришло то сообщение не получено
-			//{
-			//	Console.WriteLine(ComReply.Length);
-			//	ComReply = comport.ReadLine();
-			//Console.WriteLine("aaa " + ComReply);
-			//	Thread.Sleep(100);
-			//	i++;
-			//	if (i == 10)
-			//	{
-			//		Console.WriteLine(System.DateTime.Now.ToLongTimeString() + ": ERROR: Время ожидания приема истекло.ComRead\n");
-			//		return "false";
-			//	}
-			//}
+			int i = 1;
+			while (string.IsNullOrEmpty(ComReply)) // выполняем цикл пока строка пуста, если прошло время, а соообщение так и не пришло то сообщение не получено
+			{
+				Thread.Sleep(100);
+				i++;
+				if (i == 10)
+				{
+					Console.WriteLine(System.DateTime.Now.ToLongTimeString() + ": ERROR: Время ожидания приема истекло.ComRead\n");
+					return "false";
+				}
+			}
 			string tmp = ComReply;
-			ComReply = ""; // очищаем переменную			return tmp;
-
-
+			ComReply = ""; // очищаем переменную
+			return tmp;
 
 		}
-#endregion
 		/*Функция перевода из int в hex .*/
-		public static string chardig(int temp)
+		private static string chardig(double temp)
 		{
 
-			//temp = Math.Round(temp, 2); // сокращем до десятой
-			int intValue = temp * 10;// умножаем на 10
+			temp = Math.Round(temp, 2); // сокращем до десятой
+			int intValue = Convert.ToInt32(temp * 10);// конвертируем в целое и умножаем на 10
 			string hexValue = intValue.ToString("X4");//переводим в Hex формата 0000-FFFFH
 			if (temp > 0)//Если число положительное то просто отправляем
 			{
@@ -125,7 +101,7 @@ namespace Diplom
 				hexValue = hexValue.Substring(4);
 				return hexValue;
 			}
-			return "0000"; // Если температура равна 0
+			return "0000";
 		}
 
 		/*На входе команда без символов : CR LC .На выходе контрольная сумма команды формата 00-FFH */
@@ -151,85 +127,77 @@ namespace Diplom
 		/// <summary>
 		/// Установка температуры
 		/// </summary>
-		public bool setTargetTemperature(int setTemp)
+		public bool setTargetTemperature(double setTemp)
 		{
 			try
 			{
-				if (Diplom.MainProgramm.SetFlagThread == false)	
-				{
-					return false;
-				}
 				string command = "01060173" + chardig(setTemp);// команда установки уставки + температура в HEX
 				command += calculateLRC(command); // добавляем контрольную сумма
 				command = ":" + command + "\r\n"; // итоговая команда
 				comport.Write(command); // отпраялем команду
-										//if (command == ComRead())// проверяем, пришла ли команда, что мы отправили(если да,то отправка успешна)
-				string otvet = ComRead();
-				Console.WriteLine(calculateLRC(otvet.Substring(1, 12)) + " == " + otvet.Substring(13, 2));
-				if ((calculateLRC(otvet.Substring(1, 12)) == otvet.Substring(13, 2)))					return true;
-				else {
-                    Diplom.MainClass.win.Log("Команда уставки не совпадает с ответом. Проверю ком порт и отправлю уставку еще раз через 5 сек.");
-					Thread.Sleep(5000);                    initPort(number);
-					return  setTargetTemperature(setTemp);
-					}
+				if (command == ComRead())// проверяем, пришла ли команда, что мы отправили(если да,то отправка успешна)
+					return true;
+				else return false;
 			}
-			catch (Exception EX )
+			catch (Exception)
 			{
-                Diplom.MainClass.win.Log(": ERROR: " + EX.Message);
 				Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR:Неудачно отправка.Установка уставки setTargetTemperature\n");
-				Thread.Sleep(5000);
-				initPort(number);
-				return setTargetTemperature(setTemp);
+				if (comport.IsOpen)
+				{
+					Console.Write("Порт открыт \n");
+					return false;
+				}
+				else
+				{
+					initPort(number);
+					return setTargetTemperature(setTemp);
 
+				}
 			}
 		}
 
 		///<summary>
-		///Получаем значение температуры. В случаи ошибки вернет 404
+		///Получаем значение температуры
 		///</summary>
 		public int getCurrentTemperature() //////
 		{
 			try
 			{
-				if (Diplom.MainProgramm.SetFlagThread == false)
-					return 404;
 				comport.Write(":010300000001FB\r\n");
 				string tmp_st = ComRead();
 
 				if (tmp_st == "false") // если чтение не удалось то вызываем функцию опять
 				{
-					//Diplom.MainClass.win.Log("Ошибка чтение. Повторяю запрос.");
-					return getCurrentTemperature();
-				}
-				//Console.WriteLine(calculateLRC(tmp_st.Substring(1, 10)) +"---" +tmp_st.Substring(11, 2));
-				if (!(calculateLRC(tmp_st.Substring(1, 10)) == tmp_st.Substring(11, 2)))
-				{
-					//Diplom.MainClass.win.Log("Ответ имеет неверный LRC. Повторяю запрос. ");
 					return getCurrentTemperature();
 				}
 				string temp = tmp_st.Substring(7, 4); //вырезаем температуру
 
 				return int.Parse(temp, System.Globalization.NumberStyles.HexNumber) / 10; // переводим в 10 систему счисления, делим на 10 и возвращаем целое число
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
-				//Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR: Получение температуры. ");
-                Diplom.MainClass.win.Log(": ERROR: " + ex.Message);
-				initPort(number);
-				return getCurrentTemperature();
+				Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR: Получение температуры. ");
+				if (comport.IsOpen)
+				{
+					Console.Write("Порт открыт \n");
+					return 404;
+				}
+				else
+				{
+					initPort(number);
+					return getCurrentTemperature();
 
+				}
 
 			}
 		}
 		///<summary>
-		///Получаем значение уставки. В случаи ошибки вернет 999.0 или завершение потока
+		///Получаем значение уставки
 		///</summary>
 		public double getUst()
 		{
 			try
 			{
-				if (Diplom.MainProgramm.SetFlagThread == false)
-					return 999.0;
 				comport.Write(":010300300001CB\r\n");
 				string tmp_st = ComRead();
 
