@@ -110,12 +110,14 @@ namespace Diplom
 		public static bool flagMsdZero = true;                                          // флаг =  ложь после время Sp1, тогда выход из цикла и будем считать что темп. в объекте равна темп. камеры
 		private static bool flagThreadStart;                                             // Истина поток запущен, флаг проверяется в различных функция файлов cclin, nalib  и в этом классе
 		public event Action<string> LogWriteLine;
-		public event Action<List<Complex>, List<Complex>> ShowC;//Вызывается здесь, обрабатываается в файле MainWindows. 
+		public event Action<List<Complex>, List<Complex>> ShowC;//Вызывается здесь, обрабатываается в файле MainWindows.
+		public event Action<bool> ClearC;
 		public event Action<List<Complex>, List<Complex>, List<double>> ShowSSt;
 		public event Action<List<double>> ShowMSD; //Вызывается здесь, обрабатываается в файле MainWindows. 
 		public event Action<string> WriteLabelSetting;                              //Вывод уставки
 		public event Action<string> WriteLabelTemp;
 		public event Action<string> WriteLabelMSD;
+		public event Action<bool> activateButtonStart;
 		/// <summary>
 		/// Истина - поток запущен, иначе остановлен
 		/// </summary>
@@ -137,7 +139,7 @@ namespace Diplom
 		public void Start()
 		{
 			
-			int tek_temp;                                       // текущая тмпература в камере
+			int actualTemp;                                       // текущая тмпература в камере
 			List<Double> valueMSD = new List<Double>();      //Среднее квадратичное отклонение
 			List<Complex> C = new List<Complex>();           //  это первая матрица рассеивания после готовой уставке(уст = тек темп в кам)
 			List<Complex> Ct = new List<Complex>();           //  это 
@@ -161,10 +163,10 @@ namespace Diplom
 				{
 
 					Thread.Sleep(5000);
-					tek_temp = Com.getCurrentTemperature();
-					WriteLabelTemp(tek_temp.ToString());
-					LogWriteLine("Температура в камере " + tek_temp.ToString());
-					if (i == tek_temp)
+					actualTemp = Com.getCurrentTemperature();
+					WriteLabelTemp(actualTemp.ToString());
+					LogWriteLine("Температура в камере " + actualTemp.ToString());
+					if (i == actualTemp)
 						break;
 					//System.Threading.Thread.Sleep(1000);
 				}
@@ -175,7 +177,7 @@ namespace Diplom
 				LogWriteLine("Подключились к телнет серверу");
 
 				flagZero.Start();
-				LogWriteLine("Смена температуры после " + Diplom.MainClass.timeSp1 + "сек. Если СКО не будет меньше " + MainClass.entryMSD.ToString() + "в течение этого времени");
+				LogWriteLine("Смена температуры после " + Diplom.MainClass.timeSp1 + "сек. Если СКО не будет меньше " + MainClass.entryMSD.ToString());
 
 				LogWriteLine("Получаем C12");
 				C = (telnet.doMeasurement(1, "S12"));
@@ -228,13 +230,33 @@ namespace Diplom
 						LogWriteLine("Условие выполняется: " + valueMSD[valueMSD.Count - 1] + "<=" + MainClass.entryMSD + "Изменяем уставку");
 						telnet.Dispose();
 						LogWriteLine("Отключил телнет");
-						flagZero.Abort();       //Закрываем поток
+						flagZero.Abort();       //Закрываем поток, останавливаем таймер Zero - при истечении, которого температура сменится
 						break;
 					}
 					LogWriteLine("Условие не выполняется: " + valueMSD[valueMSD.Count - 1] + "<=" + MainClass.entryMSD);
 				}
+					if (flagMsdZero == false) { 
+						telnet.Dispose();
+					}
 				//Diplom.MainClass.
+			} // конец цикла с температурой
+
+			if (Diplom.MainProgramm.flagZero.IsAlive)   // отключаем таймер, при котором температура в камере меняется по его истечению
+			{
+
+				Diplom.MainProgramm.flagZero.Abort();
+				Diplom.MainProgramm.flagZero.Join();
 			}
+
+				if (Diplom.MainProgramm.Com.CheckOpen())            // закрываем ком порт, если включен
+					Diplom.MainProgramm.Com.Dispose();
+				if (Diplom.MainProgramm.telnet.IsOpen)            // закрываем телнет, если включен
+					Diplom.MainProgramm.telnet.Dispose();
+				activateButtonStart(true);                          // Включаем кнопку старт
+
+
+			LogWriteLine("РАБОТА ЗАВЕРШЕНА!\n\n\n\n\n\n");
+
 
 		}
 		public static void FuncFlagZero()

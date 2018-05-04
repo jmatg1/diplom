@@ -108,7 +108,11 @@ public partial class MainWindow : Gtk.Window
 		_start.WriteLabelMSD += _start_WriteLabelMSD;
 		_start.ShowMSD += ChartingMSD;
 		_start.ShowC += ChartingC;
-
+		_start.ClearC += ChartingCClear;
+		_start.activateButtonStart	+= delegate {
+			butStart.Sensitive = true;
+			
+};
 		threadStart = new Thread(new ThreadStart(_start.Start));
 		threadStart.IsBackground = true; //теперь он фоновый и его можно закрыть по закытию  программы
 		Diplom.MainProgramm.SetFlagThread = true;
@@ -155,7 +159,7 @@ public partial class MainWindow : Gtk.Window
 	}
 	#endregion
 	/// <summary>
-	/// Останавливаем поток.
+	/// Останавливаем потоки.
 	/// </summary>
 	protected void OnButStopClicked(object sender, EventArgs e)
 	{
@@ -259,7 +263,7 @@ public partial class MainWindow : Gtk.Window
 	/// <summary>
 	/// Очистка графика С
 	/// </summary>
-	public void ChartingCClear()
+	public void ChartingCClear(bool a)
 	{
 		pointsC.Clear();
 		_plotC.Series.Clear();

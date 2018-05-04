@@ -146,7 +146,10 @@ namespace Diplom
 			{
 				LRC = (byte)((LRC + bb[i]) & 0xFF);
 			}
-			return (String.Format("{0:X}", (byte)(((LRC ^ 0xFF) + 1) & 0xFF)));
+			string strLRC = String.Format("{0:X}", (byte)(((LRC ^ 0xFF) + 1) & 0xFF));
+			if (strLRC.Length == 1)			//если LRC имеет вид 0-FH, то добавляем нуль, было 0..FH
+				strLRC = "0" + strLRC;		// Стало 00..FFH
+			return (strLRC);
 		}
 		/// <summary>
 		/// Установка температуры
@@ -198,13 +201,13 @@ namespace Diplom
 
 				if (tmp_st == "false") // если чтение не удалось то вызываем функцию опять
 				{
-					//Diplom.MainClass.win.Log("Ошибка чтение. Повторяю запрос.");
+					Diplom.MainClass.win.Log("Ошибка чтение. Повторяю запрос.");
 					return getCurrentTemperature();
 				}
-				//Console.WriteLine(calculateLRC(tmp_st.Substring(1, 10)) +"---" +tmp_st.Substring(11, 2));
+				Console.WriteLine(calculateLRC(tmp_st.Substring(1, 10)) +"---" +tmp_st.Substring(11, 2));
 				if (!(calculateLRC(tmp_st.Substring(1, 10)) == tmp_st.Substring(11, 2)))
 				{
-					//Diplom.MainClass.win.Log("Ответ имеет неверный LRC. Повторяю запрос. ");
+					Diplom.MainClass.win.Log("Ответ имеет неверный LRC. Повторяю запрос. ");
 					return getCurrentTemperature();
 				}
 				string temp = tmp_st.Substring(7, 4); //вырезаем температуру
@@ -213,7 +216,7 @@ namespace Diplom
 			}
 			catch (Exception ex)
 			{
-				//Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR: Получение температуры. ");
+				Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR: Получение температуры. ");
                 Diplom.MainClass.win.Log(": ERROR: " + ex.Message);
 				initPort(number);
 				return getCurrentTemperature();

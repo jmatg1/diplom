@@ -250,7 +250,7 @@ namespace Diplom
 			}
 			while (input.Length < 1);
 			List<string> freq_string = input.Split(',').ToList();
-			List<double> freq = freq_string.Select(x => double.Parse(x)).ToList();// добавляем частоты в лист - аналог в си это вектор
+			List<double> freq = freq_string.Select(x => double.Parse(x,System.Globalization.CultureInfo.InvariantCulture)).ToList();// добавляем частоты в лист - аналог в си это вектор
 			/*foreach (string combo in freq_string)
 			{
 				Console.WriteLine(combo);
@@ -278,7 +278,7 @@ namespace Diplom
 			//---END----
 
 			List<string> sp_string = input.Split(',').ToList();
-			List<double> sp = sp_string.Select(x => double.Parse(x)).ToList();
+			List<double> sp = sp_string.Select(x => double.Parse(x,System.Globalization.CultureInfo.InvariantCulture)).ToList();
 			List<Complex> Scomplex = new List<Complex>();
 			for (int i = 0; i < sp.Count; i += 2)
 			{
