@@ -2,14 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\COM\COM\Program.cs" relfile="COM\Program.cs" line="34" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench ActiveDocument="COM\Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="COM\Properties\ModbusASCIIInterface.cs">
     <Files>
-      <File FileName="COM\Program.cs" Line="24" Column="1" />
-      <File FileName="COM\Properties\ModbusASCIIInterface.cs" Line="63" Column="9" />
+      <File FileName="COM\Properties\ModbusASCIIInterface.cs" Line="162" Column="17" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MultiItemStartupConfigurations />

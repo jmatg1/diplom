@@ -108,11 +108,12 @@ public partial class MainWindow : Gtk.Window
 		_start.WriteLabelMSD += _start_WriteLabelMSD;
 		_start.ShowMSD += ChartingMSD;
 		_start.ShowC += ChartingC;
-		_start.ClearC += ChartingCClear;
+		_start.ClearCandMSD += ChartingCandMSDClear;
 		_start.activateButtonStart	+= delegate {
 			butStart.Sensitive = true;
-			
-};
+
+		};
+		_start.ShowDialog += ShowDialog;
 		threadStart = new Thread(new ThreadStart(_start.Start));
 		threadStart.IsBackground = true; //теперь он фоновый и его можно закрыть по закытию  программы
 		Diplom.MainProgramm.SetFlagThread = true;
@@ -126,35 +127,45 @@ public partial class MainWindow : Gtk.Window
 	public void Log(string s)
 	{
 		Gtk.Application.Invoke(delegate
-		{
-			s = System.DateTime.Now.ToLongTimeString() +" " + s + "\n";
-			//textview3.Buffer.Insert(textview3.Buffer.StartIter, s);
-			var ti = textview3.Buffer.StartIter;
-			textview3.Buffer.Insert(ref ti, s);
-		});
+			{
+				s = System.DateTime.Now.ToLongTimeString() +" " + s + "\n";
+				//textview3.Buffer.Insert(textview3.Buffer.StartIter, s);
+				var ti = textview3.Buffer.StartIter;
+				textview3.Buffer.Insert(ref ti, s);
+				try
+				{
+					File.AppendAllText(Diplom.MainClass.pathLog, s,Encoding.UTF8);
+				}
+				catch (Exception)
+				{
+					Diplom.MainClass.win.Log("Ошибка записи в файл log");
+				}
+			});
+
 	}
 
 	void _start_WriteLabelSetting(string setting)
 	{
 		Gtk.Application.Invoke(delegate
-		{
-			this.LabelSetting.Text = setting;
-		});	}
+			{
+				this.LabelSetting.Text = setting;
+			});
+	}
 
 	void _start_WriteLabelTemp(string temp)
 	{
 		Gtk.Application.Invoke(delegate
-		{
-			this.LabelTemp.Text = temp;
-		});
+			{
+				this.LabelTemp.Text = temp;
+			});
 	}
 
 	void _start_WriteLabelMSD(string MSD)
 	{
 		Gtk.Application.Invoke(delegate
-		{
-			this.LabelMSD.Text = MSD;
-		});
+			{
+				this.LabelMSD.Text = MSD;
+			});
 
 	}
 	#endregion
@@ -165,14 +176,17 @@ public partial class MainWindow : Gtk.Window
 	{
 		try
 		{
-			if (threadStart == null)                            // если поток не создан, то ничего не делаем
-				return;
-			if (Diplom.MainProgramm.flagZero.IsAlive)   // отключаем таймер, при котором температура в камере меняется по его истечению
-			{
+			//if (threadStart == null)
+			//{                         // если поток не создан, то ничего не делаем
+				Console.WriteLine(Diplom.MainProgramm.SetFlagThread);
+			//	return;
+			//}
+			//if (!Diplom.MainProgramm.flagZero == null)   // отключаем таймер, при котором температура в камере меняется по его истечению
+			//{
 
-				Diplom.MainProgramm.flagZero.Abort();
-				Diplom.MainProgramm.flagZero.Join();
-			}
+			//	Diplom.MainProgramm.flagZero.Abort();
+			//	Diplom.MainProgramm.flagZero.Join();
+			//}
 			if (threadStart.IsAlive)
 			{
 				Diplom.MainProgramm.SetFlagThread = false;          // ЗАкрытие потока
@@ -186,7 +200,7 @@ public partial class MainWindow : Gtk.Window
 
 			}
 		}
-		catch(Exception ex){ return; }
+		catch (Exception ex) { Console.WriteLine(ex.Message); }
 	}
 	/// <summary>
 	/// Два графика. Первый и второй такойже только после некоторго времени
@@ -196,6 +210,8 @@ public partial class MainWindow : Gtk.Window
 	/// <param name="freq">Freq.</param>
 	public void ChartingSt(List<Complex> S, List<Complex> St, List<double> freq)
 	{
+		if (S.Count != St.Count)
+			return;
 		_plotS12.Series.Clear(); // Очищаем точки
 		var points = new List<DataPoint>();
 		var points1 = new List<DataPoint>();
@@ -217,17 +233,17 @@ public partial class MainWindow : Gtk.Window
 		_plotS12.Series.Add(areaSeries);
 		_plotS12.Series.Add(areaSeries1);
 		Gtk.Application.Invoke(delegate
-		{
-			if (this.comboS.Active == 0)
 			{
-				//_plotView.Model = _plotS12;
+				if (this.comboS.Active == 0)
+				{
+					//_plotView.Model = _plotS12;
 
-				_plotS12.InvalidatePlot(true);  //Должна обновить график!!! ПРОВЕРИТЬ
-												//this.hpaned2.Child2.Hide();	//Если не поможет то вот это расскомментировать
-			}                           //this.hpaned2.Child2.ShowAll ();
+					_plotS12.InvalidatePlot(true);  //Должна обновить график!!! ПРОВЕРИТЬ
+					//this.hpaned2.Child2.Hide();	//Если не поможет то вот это расскомментировать
+				}                           //this.hpaned2.Child2.ShowAll ();
 
 
-		});
+			});
 
 	}
 	/// <summary>
@@ -249,76 +265,99 @@ public partial class MainWindow : Gtk.Window
 
 		_plotMSD.Series.Add(areaSeries);
 		Gtk.Application.Invoke(delegate
-		{
-			if (this.comboS.Active == 1)
 			{
-				//_plotView.Model = _plotMSD;
+				if (this.comboS.Active == 1)
+				{
+					//_plotView.Model = _plotMSD;
 
-				_plotMSD.InvalidatePlot(true);
-			}
+					_plotMSD.InvalidatePlot(true);
+				}
 
-		});
+			});
 
 	}
 	/// <summary>
 	/// Очистка графика С
 	/// </summary>
-	public void ChartingCClear(bool a)
+	public void ChartingCandMSDClear(bool a)
 	{
 		pointsC.Clear();
 		_plotC.Series.Clear();
+		_plotMSD.Series.Clear();
 	}
 	public List<DataPoint> pointsC = new List<DataPoint>();
-	public void ChartingC(List<Complex> C, List<Complex> Ct)
+	public void ChartingC(List<double> C) //, List<Complex> Ct
 	{
-		
+
 		//points.Add(new DataPoint(17500, 14350));
-		double sum = 0.0;
-		for (int i = 0; i < Ct.Count; i++)
-		{
-			sum += C[0].Real - Ct[i].Real + C[0].Imaginary - Ct[i].Imaginary;
-		}
-		Diplom.MainProgramm.timeSecond += DateTime.Now.Second;
-		pointsC.Add(new DataPoint(Convert.ToDouble(Diplom.MainProgramm.timeSecond), sum ));
+		//double sum = 0.0;
+		//for (int i = 0; i < Ct.Count; i++)
+		//{
+		//	sum += C[0].Real - Ct[i].Real + C[0].Imaginary - Ct[i].Imaginary;
+		//}
+		var pointsMSD = new List<DataPoint>();
+		pointsC.Add(new DataPoint(C.Count*10, C.Last()));
 
 		var areaSeries = new LineSeries();
 		areaSeries.ItemsSource = pointsC;
 		areaSeries.Color = OxyColor.FromRgb(1,0,0);
 		_plotC.Series.Add(areaSeries);
 		Gtk.Application.Invoke(delegate
-		{
-			if (this.comboS.Active == 2)
 			{
-				_plotC.InvalidatePlot(true);
-			}
-		});
+				if (this.comboS.Active == 2)
+				{
+					_plotC.InvalidatePlot(true);
+				}
+			});
 
 	}
 	protected void OnComboSChanged(object sender, EventArgs e)
 	{
 		switch (this.comboS.Active)
 		{
-			case 0: // S12
-				{
-					_plotView.Model = _plotS12;
-					//System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
-					break;
-				}
-			case 1: //MSD
-				{
-					//System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
-					_plotView.Model = _plotMSD;
-					break;
-				}
-			case 2: // СКО
-				{
-					//System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
-					_plotView.Model = _plotC;
-					break;
-				}
+		case 0: // S12
+			{
+				_plotView.Model = _plotS12;
+				//System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
+				break;
+			}
+		case 1: //MSD
+			{
+				//System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
+				_plotView.Model = _plotMSD;
+				break;
+			}
+		case 2: // СКО
+			{
+				//System.Diagnostics.Debug.WriteLine(this.comboS.ActiveText);
+				_plotView.Model = _plotC;
+				break;
+			}
 
 		}
 
 
+	}
+	public static void ShowDialog(string msg)
+	{
+		MessageDialog md = new MessageDialog (null, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, msg);
+		md.Run ();
+		md.Destroy();
+	}
+	protected void OnHelpActionActivated (object sender, EventArgs e)
+	{
+		ShowDialog ("Файлы логов хранятся в папке log, частоты и S-параметры в папаке uot. Настройки программы рядом с exe, файл settings.txt");
+	}
+	protected void OnDialogInfoAction1Activated (object sender, EventArgs e)
+	{
+		ShowDialog ("Программа поставляется по принципу \"AS IS\" (\"как есть\").");
+	}
+
+
+
+
+	protected void OnDialogInfoActionActivated (object sender, EventArgs e)
+	{
+		ShowDialog ("Автор: Роман Евгеньвич Сапетин");
 	}
 }

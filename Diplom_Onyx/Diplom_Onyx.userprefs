@@ -7,11 +7,10 @@
   <MonoDevelop.Ide.ItemProperties.Diplom__Onyx PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
     <Files>
-      <File FileName="Program.cs" Line="59" Column="193" />
-      <File FileName="MainWindow.cs" Line="122" Column="17" />
-      <File FileName="SettingsWindows.cs" Line="53" Column="50" />
-      <File FileName="Properties\nalib.cs" Line="285" Column="39" />
-      <File FileName="Properties\cclib.cs" Line="188" Column="17" />
+      <File FileName="Program.cs" Line="142" Column="4" />
+      <File FileName="MainWindow.cs" Line="103" Column="9" />
+      <File FileName="Properties\nalib.cs" Line="392" Column="11" />
+      <File FileName="gtk-gui\gui.stetic" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MultiItemStartupConfigurations />

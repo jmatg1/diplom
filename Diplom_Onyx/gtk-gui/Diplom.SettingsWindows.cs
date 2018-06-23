@@ -281,7 +281,7 @@ namespace Diplom
 			this.GtkLabel3 = new global::Gtk.Label();
 			this.GtkLabel3.Name = "GtkLabel3";
 			this.GtkLabel3.Xalign = 0F;
-			this.GtkLabel3.LabelProp = global::Mono.Unix.Catalog.GetString("<b>Ожидание, сек</b>");
+			this.GtkLabel3.LabelProp = global::Mono.Unix.Catalog.GetString("<b>Интервал, сек</b>");
 			this.GtkLabel3.UseMarkup = true;
 			this.frame2.LabelWidget = this.GtkLabel3;
 			this.hbox3.Add(this.frame2);
@@ -401,8 +401,10 @@ namespace Diplom
 			{
 				this.Child.ShowAll();
 			}
-			this.DefaultWidth = 400;
+			this.DefaultWidth = 468;
 			this.DefaultHeight = 269;
+			this.label15.Hide();
+			this.timeSp1.Hide();
 			this.Show();
 			this.buttonCancel.Clicked += new global::System.EventHandler(this.OnButtonCancelClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler(this.OnButtonOkClicked);

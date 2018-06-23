@@ -4,12 +4,10 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Properties\TelnetInterface.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Properties\nalib.cs">
     <Files>
-      <File FileName="Properties\TelnetInterface.cs" Line="15" Column="12" />
-      <File FileName="Properties\TelnetClient.cs" Line="85" Column="28" />
-      <File FileName="Properties\DataReceivedEventArgs.cs" Line="1" Column="1" />
-      <File FileName="Properties\AssemblyInfo.cs" Line="1" Column="1" />
+      <File FileName="Program.cs" Line="39" Column="58" />
+      <File FileName="Properties\nalib.cs" Line="14" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MultiItemStartupConfigurations />

@@ -1,4 +1,0 @@
-D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\Telnet\ServerSoket\bin\Debug\ServerSoket.exe
-D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\Telnet\ServerSoket\bin\Debug\ServerSoket.pdb
-D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\Telnet\ServerSoket\obj\x86\Debug\ServerSoket.exe
-D:\Сайт\YandexDisk\Учеба\FINALE\ДИПЛОМ\Telnet\ServerSoket\obj\x86\Debug\ServerSoket.pdb

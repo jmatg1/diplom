@@ -9,11 +9,16 @@ namespace Diplom
 	public class ModbusASCIIInterface : IDisposable
 	{
 
-  #region Ком порт. Настройки, отправка, чтение.
-		public static SerialPort comport; // com port
-		public static string number; // номер порта, применяется в catch для воостановление соединения 
-		public static string ComReply = ""; // строка ответа компорта
-		public static int ReadTimeout = 10000; // время ожидания ответа
+		#region Ком порт. Настройки, отправка, чтение.
+
+		public static SerialPort comport;
+		// com port
+		public static string number;
+		// номер порта, применяется в catch для воостановление соединения
+		public static string ComReply = "";
+		// строка ответа компорта
+		public static int ReadTimeout = 10000;
+		// время ожидания ответа
 
 		public delegate void ConnectionDelegate();
 
@@ -22,10 +27,12 @@ namespace Diplom
 		{
 			comport = new SerialPort();
 		}
+
 		public void Dispose()
 		{
 			Close();
 		}
+
 		/// <summary>
 		/// Инициализация порта
 		/// </summary>
@@ -45,18 +52,18 @@ namespace Diplom
 				comport.StopBits = System.IO.Ports.StopBits.One;
 				comport.ReadTimeout = 5000;
 				comport.WriteTimeout = 5000;
-			//	comport.DataReceived += new SerialDataReceivedEventHandler(ComDataRec); // функция ComDataRec.. вызывается когда пришло сообщение на ком порт
+				//	comport.DataReceived += new SerialDataReceivedEventHandler(ComDataRec); // функция ComDataRec.. вызывается когда пришло сообщение на ком порт
 				comport.Open();
 
 
 			}
-			catch (Exception) // Выполняем это вслучаи любой ошибке
-			{
+			catch (Exception)
+			{ // Выполняем это вслучаи любой ошибке
 				if (Diplom.MainProgramm.SetFlagThread == false)
 				{
 					return false;
 				}
-				Diplom.MainClass.win.Log (": ERROR: Порт " + number + " не отвечает. Открытие через 6 сек.");
+				Diplom.MainClass.win.Log(": ERROR: Порт " + number + " не отвечает. Открытие через 6 сек.");
 				//Console.WriteLine(System.DateTime.Now.ToLongTimeString() + ": ERROR: Порт " + num + " не отвечает. Открытие через 1 минуту." /*+ e.ToString()*/);
 				Thread.Sleep(6000);// 60 000 = 1 минута
 				initPort(number);
@@ -65,6 +72,7 @@ namespace Diplom
 			return true;
 
 		}
+
 		public bool CheckOpen()
 		{
 			if (!comport.IsOpen)
@@ -72,10 +80,12 @@ namespace Diplom
 
 			return true;
 		}
+
 		public void Close()
 		{
 			comport.Close();
 		}
+
 		private void ComDataRec(object sender, SerialDataReceivedEventArgs e) // заносим сообщение в глобальную переменную Comreply
 		{
 
@@ -83,6 +93,7 @@ namespace Diplom
 			ComReply += sp.ReadExisting();
 			//Console.WriteLine (ComReply);
 		}
+
 		private string ComRead()
 		{
 			//int i = 1;
@@ -103,12 +114,15 @@ namespace Diplom
 			//	}
 			//}
 			string tmp = ComReply;
-			ComReply = ""; // очищаем переменную			return tmp;
+			ComReply = ""; // очищаем переменную
+			return tmp;
 
 
 
 		}
-#endregion
+
+		#endregion
+
 		/*Функция перевода из int в hex .*/
 		public static string chardig(int temp)
 		{
@@ -116,12 +130,12 @@ namespace Diplom
 			//temp = Math.Round(temp, 2); // сокращем до десятой
 			int intValue = temp * 10;// умножаем на 10
 			string hexValue = intValue.ToString("X4");//переводим в Hex формата 0000-FFFFH
-			if (temp > 0)//Если число положительное то просто отправляем
-			{
+			if (temp > 0)
+			{//Если число положительное то просто отправляем
 				return hexValue;
 			}
-			if (temp < 0)// если отрицательное, то берем первый четыре разряда, F..FFF06 = FF06
-			{
+			if (temp < 0)
+			{// если отрицательное, то берем первый четыре разряда, F..FFF06 = FF06
 				hexValue = hexValue.Substring(4);
 				return hexValue;
 			}
@@ -147,10 +161,11 @@ namespace Diplom
 				LRC = (byte)((LRC + bb[i]) & 0xFF);
 			}
 			string strLRC = String.Format("{0:X}", (byte)(((LRC ^ 0xFF) + 1) & 0xFF));
-			if (strLRC.Length == 1)			//если LRC имеет вид 0-FH, то добавляем нуль, было 0..FH
-				strLRC = "0" + strLRC;		// Стало 00..FFH
+			if (strLRC.Length == 1)         //если LRC имеет вид 0-FH, то добавляем нуль, было 0..FH
+				strLRC = "0" + strLRC;      // Стало 00..FFH
 			return (strLRC);
 		}
+
 		/// <summary>
 		/// Установка температуры
 		/// </summary>
@@ -158,7 +173,7 @@ namespace Diplom
 		{
 			try
 			{
-				if (Diplom.MainProgramm.SetFlagThread == false)	
+				if (Diplom.MainProgramm.SetFlagThread == false)
 				{
 					return false;
 				}
@@ -169,16 +184,19 @@ namespace Diplom
 										//if (command == ComRead())// проверяем, пришла ли команда, что мы отправили(если да,то отправка успешна)
 				string otvet = ComRead();
 				Console.WriteLine(calculateLRC(otvet.Substring(1, 12)) + " == " + otvet.Substring(13, 2));
-				if ((calculateLRC(otvet.Substring(1, 12)) == otvet.Substring(13, 2)))					return true;
-				else {
-                    Diplom.MainClass.win.Log("Команда уставки не совпадает с ответом. Проверю ком порт и отправлю уставку еще раз через 5 сек.");
-					Thread.Sleep(5000);                    initPort(number);
-					return  setTargetTemperature(setTemp);
-					}
+				if ((calculateLRC(otvet.Substring(1, 12)) == otvet.Substring(13, 2)))
+					return true;
+				else
+				{
+					Diplom.MainClass.win.Log("Команда уставки не совпадает с ответом. Проверю ком порт и отправлю уставку еще раз через 5 сек.");
+					Thread.Sleep(5000);
+					initPort(number);
+					return setTargetTemperature(setTemp);
+				}
 			}
-			catch (Exception EX )
+			catch (Exception EX)
 			{
-                Diplom.MainClass.win.Log(": ERROR: " + EX.Message);
+				Diplom.MainClass.win.Log(": ERROR: " + EX.Message);
 				Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR:Неудачно отправка.Установка уставки setTargetTemperature\n");
 				Thread.Sleep(5000);
 				initPort(number);
@@ -190,7 +208,7 @@ namespace Diplom
 		///<summary>
 		///Получаем значение температуры. В случаи ошибки вернет 404
 		///</summary>
-		public int getCurrentTemperature() //////
+		public double getCurrentTemperature() //////
 		{
 			try
 			{
@@ -199,31 +217,40 @@ namespace Diplom
 				comport.Write(":010300000001FB\r\n");
 				string tmp_st = ComRead();
 
-				if (tmp_st == "false") // если чтение не удалось то вызываем функцию опять
-				{
+				if (tmp_st == "false")
+				{ // если чтение не удалось то вызываем функцию опять
 					Diplom.MainClass.win.Log("Ошибка чтение. Повторяю запрос.");
 					return getCurrentTemperature();
 				}
-				Console.WriteLine(calculateLRC(tmp_st.Substring(1, 10)) +"---" +tmp_st.Substring(11, 2));
+				//				Console.WriteLine (calculateLRC (tmp_st.Substring (1, 10)) + "---" + tmp_st.Substring (11, 2));
 				if (!(calculateLRC(tmp_st.Substring(1, 10)) == tmp_st.Substring(11, 2)))
 				{
 					Diplom.MainClass.win.Log("Ответ имеет неверный LRC. Повторяю запрос. ");
 					return getCurrentTemperature();
 				}
 				string temp = tmp_st.Substring(7, 4); //вырезаем температуру
+				double temper = int.Parse(temp, System.Globalization.NumberStyles.HexNumber); // переводим в 10 систему счисления, делим на 10
 
-				return int.Parse(temp, System.Globalization.NumberStyles.HexNumber) / 10; // переводим в 10 систему счисления, делим на 10 и возвращаем целое число
+				Console.WriteLine("temper " + temper);
+				if (temper > 60000.0)
+				{   //если число отрицательное
+					temper -= 65535.0;
+				}
+				temper /= 10;
+				temper = Math.Round(temper, 1);
+				return temper;
 			}
 			catch (Exception ex)
 			{
 				Console.Write(System.DateTime.Now.ToLongTimeString() + ": ERROR: Получение температуры. ");
-                Diplom.MainClass.win.Log(": ERROR: " + ex.Message);
+				Diplom.MainClass.win.Log(": ERROR: " + ex.Message);
 				initPort(number);
 				return getCurrentTemperature();
 
 
 			}
 		}
+
 		///<summary>
 		///Получаем значение уставки. В случаи ошибки вернет 999.0 или завершение потока
 		///</summary>

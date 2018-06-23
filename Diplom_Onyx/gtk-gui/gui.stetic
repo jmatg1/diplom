@@ -59,6 +59,75 @@
         <property name="StockId">gtk-preferences</property>
         <signal name="Activated" handler="OnActionSettingsActivated" />
       </action>
+      <action id="Action3">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Помощь</property>
+        <property name="ShortLabel" translatable="yes">Помощь</property>
+      </action>
+      <action id="Action4">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Инструкция</property>
+        <property name="ShortLabel" translatable="yes">Инструкция</property>
+      </action>
+      <action id="Action5">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">О Программе</property>
+        <property name="ShortLabel" translatable="yes">О Программе</property>
+      </action>
+      <action id="Action6">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">О Авторе</property>
+        <property name="ShortLabel" translatable="yes">О Авторе</property>
+      </action>
+      <action id="Action7">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+      </action>
+      <action id="Action8">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Файл</property>
+        <property name="ShortLabel" translatable="yes">Файл</property>
+      </action>
+      <action id="Action12">
+        <property name="Type">Action</property>
+        <property name="Accelerator">&lt;Primary&gt;&lt;Mod2&gt;s</property>
+        <property name="Label" translatable="yes">Настройки</property>
+        <property name="ShortLabel" translatable="yes">Настройки</property>
+        <signal name="Activated" handler="OnActionSettingsActivated" />
+      </action>
+      <action id="Action10">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Выход</property>
+        <property name="ShortLabel" translatable="yes">Выход</property>
+      </action>
+      <action id="Action13">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Помощь</property>
+        <property name="ShortLabel" translatable="yes">Помощь</property>
+      </action>
+      <action id="helpAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Инструкция</property>
+        <property name="ShortLabel" translatable="yes">Инструкция</property>
+        <property name="StockId">gtk-help</property>
+        <signal name="Activated" handler="OnHelpActionActivated" />
+      </action>
+      <action id="dialogInfoAction1">
+        <property name="Type">Action</property>
+        <property name="Accelerator">&lt;Primary&gt;&lt;Mod2&gt;p</property>
+        <property name="Label" translatable="yes">О программе</property>
+        <property name="ShortLabel" translatable="yes">О программе</property>
+        <property name="StockId">gtk-dialog-info</property>
+        <signal name="Activated" handler="OnDialogInfoAction1Activated" />
+      </action>
+      <action id="dialogInfoAction">
+        <property name="Type">Action</property>
+        <property name="Accelerator">&lt;Primary&gt;&lt;Mod2&gt;a</property>
+        <property name="Label" translatable="yes">О Авторе</property>
+        <property name="ShortLabel" translatable="yes">О Авторе</property>
+        <property name="StockId">gtk-dialog-info</property>
+        <signal name="Activated" handler="OnDialogInfoActionActivated" />
+      </action>
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">Onyx</property>
@@ -70,13 +139,31 @@
         <property name="MemberName" />
         <property name="Spacing">6</property>
         <child>
-          <widget class="Gtk.Toolbar" id="toolbar2">
+          <widget class="Gtk.HBox" id="hbox4">
             <property name="MemberName" />
-            <property name="ShowArrow">False</property>
-            <property name="ButtonStyle">Text</property>
-            <node name="toolbar2" type="Toolbar">
-              <node type="Toolitem" action="preferencesAction" />
-            </node>
+            <property name="Spacing">6</property>
+            <child>
+              <widget class="Gtk.MenuBar" id="menubar3">
+                <property name="MemberName" />
+                <node name="menubar3" type="Menubar">
+                  <node type="Menu" action="Action7" />
+                  <node type="Menu" action="Action8">
+                    <node type="Menuitem" action="Action12" />
+                  </node>
+                  <node type="Menu" action="Action13">
+                    <node type="Menuitem" action="helpAction" />
+                    <node type="Menuitem" action="dialogInfoAction1" />
+                    <node type="Menuitem" action="dialogInfoAction" />
+                  </node>
+                </node>
+              </widget>
+              <packing>
+                <property name="Position">0</property>
+                <property name="AutoSize">True</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
           </widget>
           <packing>
             <property name="Position">0</property>
@@ -89,7 +176,7 @@
           <widget class="Gtk.HPaned" id="hpaned2">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="Position">1</property>
+            <property name="Position">281</property>
             <child>
               <widget class="Gtk.VBox" id="vbox2">
                 <property name="MemberName" />
@@ -219,6 +306,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="ShowScrollbars">True</property>
+                            <property name="CursorVisible">False</property>
                             <property name="Overwrite">True</property>
                             <property name="Text" translatable="yes" />
                             <property name="WrapMode">WordChar</property>
@@ -323,7 +411,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="Diplom.SettingsWindows" design-size="400 269">
+  <widget class="Gtk.Dialog" id="Diplom.SettingsWindows" design-size="468 269">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Настройки</property>
     <property name="Icon">stock:gtk-preferences Menu</property>
@@ -363,6 +451,7 @@
                             <child>
                               <widget class="Gtk.Label" id="label11">
                                 <property name="MemberName" />
+                                <property name="Xalign">0</property>
                                 <property name="LabelProp" translatable="yes">Начальная</property>
                               </widget>
                               <packing>
@@ -373,6 +462,7 @@
                             <child>
                               <widget class="Gtk.Label" id="label12">
                                 <property name="MemberName" />
+                                <property name="Xalign">0</property>
                                 <property name="LabelProp" translatable="yes">Конечная</property>
                               </widget>
                               <packing>
@@ -385,6 +475,7 @@
                             <child>
                               <widget class="Gtk.Label" id="label13">
                                 <property name="MemberName" />
+                                <property name="Xalign">0</property>
                                 <property name="LabelProp" translatable="yes">Шаг</property>
                               </widget>
                               <packing>
@@ -514,6 +605,7 @@
                             <child>
                               <widget class="Gtk.Label" id="label14">
                                 <property name="MemberName" />
+                                <property name="Xalign">0</property>
                                 <property name="LabelProp" translatable="yes">Измерений</property>
                               </widget>
                               <packing>
@@ -526,6 +618,8 @@
                             <child>
                               <widget class="Gtk.Label" id="label15">
                                 <property name="MemberName" />
+                                <property name="Visible">False</property>
+                                <property name="Xalign">0</property>
                                 <property name="LabelProp" translatable="yes">Период</property>
                               </widget>
                               <packing>
@@ -569,6 +663,7 @@
                             <child>
                               <widget class="Gtk.SpinButton" id="timeSp1">
                                 <property name="MemberName" />
+                                <property name="Visible">False</property>
                                 <property name="CanFocus">True</property>
                                 <property name="Upper">999999999</property>
                                 <property name="PageIncrement">10</property>
@@ -600,7 +695,7 @@
                   <widget class="Gtk.Label" id="GtkLabel3">
                     <property name="MemberName" />
                     <property name="Xalign">0</property>
-                    <property name="LabelProp" translatable="yes">&lt;b&gt;Ожидание, сек&lt;/b&gt;</property>
+                    <property name="LabelProp" translatable="yes">&lt;b&gt;Интервал, сек&lt;/b&gt;</property>
                     <property name="UseMarkup">True</property>
                   </widget>
                   <packing>
@@ -629,6 +724,7 @@
             <child>
               <widget class="Gtk.Label" id="label6">
                 <property name="MemberName" />
+                <property name="Xalign">0</property>
                 <property name="LabelProp" translatable="yes">СКО</property>
               </widget>
               <packing>
@@ -653,9 +749,7 @@
           </widget>
           <packing>
             <property name="Position">1</property>
-            <property name="AutoSize">True</property>
-            <property name="Expand">False</property>
-            <property name="Fill">False</property>
+            <property name="AutoSize">False</property>
           </packing>
         </child>
         <child>
@@ -676,6 +770,7 @@
                     <child>
                       <widget class="Gtk.Label" id="label17">
                         <property name="MemberName" />
+                        <property name="Xalign">0</property>
                         <property name="LabelProp" translatable="yes">COM - порт</property>
                       </widget>
                       <packing>

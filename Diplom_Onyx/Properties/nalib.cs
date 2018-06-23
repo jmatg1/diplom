@@ -274,7 +274,7 @@ namespace Diplom
 				input = Read();
 				//Console.WriteLine("input.Length " + input);
 			}
-			while (input.Length < 1);//Выполняем пока ответ пришел пустой
+			while (input.Length < 10);//Выполняем пока ответ пришел пустой
 			//---END----
 
 			List<string> sp_string = input.Split(',').ToList();
@@ -285,8 +285,10 @@ namespace Diplom
 				Scomplex.Add(new Complex(sp[i], sp[i + 1]));//амплитуда, и фаза в  виде Re(Sp) Im(Sp)
 				 
 			}
-
-			//int[] scores = new int[] ;
+			if (Scomplex.Count <= 10)
+				return doMeasurement(channel, Sp);
+				
+		//int[] scores = new int[] ;
 			/*foreach (double combo in freq)
 			{
 				Console.Write(combo+",");
@@ -333,6 +335,76 @@ namespace Diplom
 			rezult = Math.Sqrt(rezult / (St.Count - 1));	// Корень( sum / (кол-во частот - 1) )
 			//Console.WriteLine(St.Count  - 1);
 			return rezult;
+		}
+		public double Filter(List<List<Complex>> S)
+		{
+			double rezult = 0;
+			List<Complex> Sm = new List<Complex>();
+			for (int i = 0; i<S.Count; i++)
+			{
+				for (int j = 0; i < S[i].Count; j++)
+				{
+
+					//rezult += MSD2(S[i][j]);
+					//Console.WriteLine(rezult);
+				}
+			}
+			return rezult;
+			
+		}
+		public double MSD2(List<Complex> S) {
+			double sredneeArifmetizeskoe = 0 , rezult = 0;
+			List<double> modulS = new List<double>();
+			for (int i = 0; i<S.Count; i++)
+			{
+				modulS.Add(Math.Sqrt(Math.Pow(S[i].Real, 2) + Math.Pow(S[i].Imaginary, 2)));
+				sredneeArifmetizeskoe += modulS[i];
+			}
+			sredneeArifmetizeskoe = sredneeArifmetizeskoe / S.Count;
+
+			for (int i = 0; i<S.Count; i++)
+			{
+				rezult += Math.Pow(modulS[i] - sredneeArifmetizeskoe, 2);
+			}
+			return Math.Sqrt(rezult / S.Count);
+		}
+
+		public double modulS(List<Complex> s)
+		{
+			double rezult = 0;
+
+
+			for (int i =0; i < s.Count; i++)
+			{
+				rezult += Math.Sqrt(Math.Pow(s[i].Real, 2) + Math.Pow(s[i].Imaginary, 2));
+			}
+			return rezult;
+		}
+		public double summModulS(List<double> s)
+		{
+			double rezult = 0;
+
+
+			for (int i = 0; i < s.Count; i++)
+			{
+				rezult += s[i];
+			}
+			return rezult;
+		}
+		public double sigma(List<double> summModulC)
+		{
+			double sredneeArifmetizeskoe = 0, rezult = 0;
+			for (int i = 0; i<summModulC.Count; i++)
+			{
+				sredneeArifmetizeskoe += summModulC[i];
+			}
+			sredneeArifmetizeskoe = sredneeArifmetizeskoe / summModulC.Count;
+
+			for (int i = 0; i<summModulC.Count; i++)
+			{
+				rezult += Math.Pow(summModulC[i] - sredneeArifmetizeskoe, 2);
+			}
+			return (Math.Sqrt(rezult / (summModulC.Count -1)))/sredneeArifmetizeskoe; // 
 		}
 	}
 }
